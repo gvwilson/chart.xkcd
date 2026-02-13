@@ -1,9 +1,18 @@
+# JS
 .cache
 node_modules
 dist
 /docs-dist
 /previous-works
-/assets
 /insprations.md
 .DS_Store
 .idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/

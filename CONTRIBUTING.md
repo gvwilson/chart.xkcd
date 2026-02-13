@@ -2,9 +2,11 @@
 
 # Contributing
 
-Before contributing to chart.xkcd you'll need a few things:
+Before contributing to chart.xkcd you'll need to:
 
 - install npm
+- install uv
+- create a Python virtual environment
 
 ## Setup
 
@@ -24,11 +26,5 @@ Then you can open `localhost:1234` to see the examples, and you can start to edi
 
 - [docs](./docs): Documentation used to generate timqian.com/chart.xkcd
 - [examples](./examples): Examples showing how to use chart.xkcd. The npm example is also used for developing and debug features for now.
-- [src](./src): where the meat locates
-
-## Releases
-
-Notes for myself:
-
-- before building chart.xkcd, shut down parcel server
-- `npm run release`(TODO)
+- [js](./js): JavaScript source
+- [py](./py): Python source

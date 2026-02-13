@@ -78,9 +78,11 @@ new chartXkcd.Line(svgLine, {
     datasets: [{
       label: 'Plan',
       data: [30, 70, 200, 300, 500, 800, 1500, 2900, 5000, 8000],
+      color: '#dd4528',
     }, {
       label: 'Reality',
       data: [0, 1, 30, 70, 80, 100, 50, 80, 40, 150],
+      color: '#28a3dd',
     }],
   },
   options: {

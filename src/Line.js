@@ -33,6 +33,9 @@ class Line {
       showLegend: true,
       ...options,
     };
+    this.options.dataColors = datasets.map(
+      (ds, i) => ds.color || this.options.dataColors[i % this.options.dataColors.length],
+    );
     if (title) {
       this.title = title;
       margin.top = 60;

@@ -32,6 +32,9 @@ class Radar {
       backgroundColor: 'white',
       ...options,
     };
+    this.options.dataColors = datasets.map(
+      (ds, i) => ds.color || this.options.dataColors[i % this.options.dataColors.length],
+    );
     this.title = title;
     this.data = {
       labels,

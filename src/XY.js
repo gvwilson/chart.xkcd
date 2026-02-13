@@ -37,6 +37,9 @@ class XY {
       showLegend: true,
       ...options,
     };
+    this.options.dataColors = datasets.map(
+      (ds, i) => ds.color || this.options.dataColors[i % this.options.dataColors.length],
+    );
     // TODO: extract a function?
     if (title) {
       this.title = title;

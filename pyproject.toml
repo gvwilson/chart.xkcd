@@ -9,6 +9,9 @@ description = "Python API for generating xkcd-style charts"
 license = "MIT"
 requires-python = ">=3.13"
 
+[project.scripts]
+chart_xkcd = "chart_xkcd.main:main"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/chart_xkcd"]
 artifacts = [
@@ -24,6 +27,11 @@ artifacts = [
 [dependency-groups]
 dev = [
     "build>=1.4.0",
+    "markdown-include>=0.8.1",
+    "mkdocs>=1.6.1",
+    "mkdocs-awesome-pages-plugin>=2.10.1",
+    "mkdocs-material>=9.7.1",
+    "mkdocstrings[python]>=1.0.0",
     "ruff>=0.14.10",
     "taskipy>=1.14.1",
     "twine>=6.2.0",
@@ -37,6 +45,11 @@ rm -rf ./dist &&
 rm -rf ./js/dist &&
 find . -path './.venv' -prune -o -type d -name '__pycache__' -exec rm -rf {} + &&
 find . -path './.venv' -prune -o -type f -name '*~' -exec rm {} +
+"""}
+docs = {help = "build documentation", cmd = """
+mkdocs build &&
+touch docs/.nojekyll &&
+cp docs-requirements.txt docs/requirements.txt
 """}
 fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}
 format = {help = "format Python code", cmd = "ruff format ."}

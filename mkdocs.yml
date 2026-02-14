@@ -1,0 +1,23 @@
+site_name: asimpy
+docs_dir: pages
+site_dir: docs
+
+theme:
+  name: material
+
+plugins:
+- awesome-pages
+- mkdocstrings:
+    handlers:
+      python:
+        paths:
+          - src
+
+markdown_extensions:
+- markdown_include.include:
+    base_path: docs
+- pymdownx.highlight
+- pymdownx.superfences
+
+exclude_docs: >
+  *~

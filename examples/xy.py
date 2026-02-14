@@ -35,4 +35,4 @@ chart = XY(
     },
 )
 
-render(chart, sys.argv[1])
+render(chart, sys.argv[1], chart_js_url="/src/chart_xkcd/static/chart.xkcd.min.js")

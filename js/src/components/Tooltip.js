@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import config from '../config';
 
 class Tooltip {

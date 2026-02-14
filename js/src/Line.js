@@ -1,9 +1,6 @@
-import line from 'd3-shape/src/line';
-import { monotoneX } from 'd3-shape/src/curve/monotone';
-import select from 'd3-selection/src/select';
-import mouse from 'd3-selection/src/mouse';
-import { point as scalePoint } from 'd3-scale/src/band';
-import scaleLinear from 'd3-scale/src/linear';
+import { line, curveMonotoneX } from 'd3-shape';
+import { select, mouse } from 'd3-selection';
+import { scalePoint, scaleLinear } from 'd3-scale';
 
 import addAxis from './utils/addAxis';
 import addLabels from './utils/addLabels';
@@ -129,7 +126,7 @@ class Line {
     const theLine = line()
       .x((d, i) => xScale(this.data.labels[i]))
       .y((d) => yScale(d))
-      .curve(monotoneX);
+      .curve(curveMonotoneX);
 
     graphPart.selectAll('.xkcd-chart-line')
       .data(this.data.datasets)
@@ -238,10 +235,6 @@ class Line {
         strokeColor: this.options.strokeColor,
       });
     }
-  }
-
-  // TODO: update chart
-  update() {
   }
 }
 

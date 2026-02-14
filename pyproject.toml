@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chart-xkcd"
+version = "0.1.0"
+description = "Python API for generating xkcd-style charts"
+license = "MIT"
+requires-python = ">=3.13"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/chart_xkcd"]
+artifacts = [
+    "src/chart_xkcd/static/chart.xkcd.min.js",
+]
+
+# For sdist, explicitly include these
+[tool.hatch.build.targets.sdist]
+artifacts = [
+    "src/chart_xkcd/static/chart.xkcd.min.js",
+]
+
+[dependency-groups]
+dev = [
+    "build>=1.4.0",
+    "ruff>=0.14.10",
+    "taskipy>=1.14.1",
+    "twine>=6.2.0",
+]
+
+[tool.taskipy.tasks]
+build = {help = "build package", cmd = "cd js && npm run build && cd - && python -m build"}
+lint = {help = "check code issues", cmd = "ruff check . && cd js && npm run lint"}
+clean = {help = "clean up", cmd = """
+rm -rf ./dist &&
+rm -rf ./js/dist &&
+find . -path './.venv' -prune -o -type d -name '__pycache__' -exec rm -rf {} + &&
+find . -path './.venv' -prune -o -type f -name '*~' -exec rm {} +
+"""}
+fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}
+format = {help = "format Python code", cmd = "ruff format ."}

@@ -1,7 +1,5 @@
-import select from 'd3-selection/src/select';
-import mouse from 'd3-selection/src/mouse';
-import pie from 'd3-shape/src/pie';
-import arc from 'd3-shape/src/arc';
+import { select, mouse } from 'd3-selection';
+import { pie, arc } from 'd3-shape';
 import Tooltip from './components/Tooltip';
 import addLegend from './utils/addLegend';
 import addLabels from './utils/addLabels';
@@ -143,10 +141,6 @@ class Pie {
         backgroundColor: this.options.backgroundColor,
       });
     }
-  }
-
-  // TODO: update chart
-  update() {
   }
 }
 

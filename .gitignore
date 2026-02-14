@@ -1,18 +1,17 @@
 # JS
 .cache
 node_modules
-dist
-/docs-dist
-/previous-works
-/insprations.md
-.DS_Store
-.idea/
+js/dist/
 
 # Python
 __pycache__/
 *.py[cod]
-*.egg-info/
-*.egg
 dist/
-build/
 .venv/
+
+# Built JS bundled into Python package
+src/chart_xkcd/static/chart.xkcd.min.js
+
+# Miscellaneous
+*~
+.DS_Store

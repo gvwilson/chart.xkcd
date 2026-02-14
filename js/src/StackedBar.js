@@ -1,7 +1,5 @@
-import select from 'd3-selection/src/select';
-import mouse from 'd3-selection/src/mouse';
-import scaleBand from 'd3-scale/src/band';
-import scaleLinear from 'd3-scale/src/linear';
+import { select, mouse } from 'd3-selection';
+import { scaleBand, scaleLinear } from 'd3-scale';
 
 import addAxis from './utils/addAxis';
 import addLabels from './utils/addLabels';
@@ -204,11 +202,6 @@ class StackedBar {
         backgroundColor: this.options.backgroundColor,
       });
     }
-  }
-
-  // TODO: update chart
-  update() {
-
   }
 }
 

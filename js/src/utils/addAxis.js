@@ -1,4 +1,4 @@
-import { axisBottom, axisLeft } from 'd3-axis/src/axis';
+import { axisBottom, axisLeft } from 'd3-axis';
 
 const yAxis = (parent, {
   yScale, tickCount, fontFamily, unxkcdify, stroke,

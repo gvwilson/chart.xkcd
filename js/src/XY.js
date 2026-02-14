@@ -1,8 +1,6 @@
-import line from 'd3-shape/src/line';
-import { monotoneX } from 'd3-shape/src/curve/monotone';
-import select from 'd3-selection/src/select';
-import scaleLinear from 'd3-scale/src/linear';
-import scaleTime from 'd3-scale/src/time';
+import { line, curveMonotoneX } from 'd3-shape';
+import { select } from 'd3-selection';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import dayjs from 'dayjs';
 
 import addAxis from './utils/addAxis';
@@ -101,7 +99,6 @@ class XY {
     if (this.options.timeFormat) {
       this.data.datasets.forEach((dataset) => {
         dataset.data.forEach((d) => {
-          // eslint-disable-next-line no-param-reassign
           d.x = dayjs(d.x);
         });
       });
@@ -152,7 +149,7 @@ class XY {
       const theLine = line()
         .x((d) => xScale(d.x))
         .y((d) => yScale(d.y))
-        .curve(monotoneX);
+        .curve(curveMonotoneX);
 
       graphPart.selectAll('.xkcd-chart-xyline')
         .data(this.data.datasets)
@@ -248,10 +245,6 @@ class XY {
         backgroundColor: this.options.backgroundColor,
       });
     }
-  }
-
-  // TODO: update chart
-  update() {
   }
 }
 

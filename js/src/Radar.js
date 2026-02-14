@@ -1,7 +1,6 @@
-import select from 'd3-selection/src/select';
-import line from 'd3-shape/src/line';
-import curveLinearClosed from 'd3-shape/src/curve/linearClosed';
-import scaleLinear from 'd3-scale/src/linear';
+import { select } from 'd3-selection';
+import { line, curveLinearClosed } from 'd3-shape';
+import { scaleLinear } from 'd3-scale';
 import addLegend from './utils/addLegend';
 import addLabels from './utils/addLabels';
 import Tooltip from './components/Tooltip';
@@ -246,9 +245,6 @@ class Radar {
         strokeColor: this.options.strokeColor,
       });
     }
-  }
-
-  update() {
   }
 }
 

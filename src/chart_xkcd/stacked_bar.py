@@ -26,18 +26,20 @@ class StackedBar(_AxisChart):
             - `backgroundColor` (str): Background color (default `'white'`).
             - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
-    Example::
+    Example:
 
-        StackedBar(
-            title="Inventory",
-            x_label="Quarter",
-            y_label="Units",
-            labels=["Q1", "Q2", "Q3"],
-            datasets=[
-                {"data": [10, 20, 30], "label": "Widgets"},
-                {"data": [5, 15, 10], "label": "Gadgets"},
-            ],
-        )
+    ```
+    StackedBar(
+        title="Inventory",
+        x_label="Quarter",
+        y_label="Units",
+        labels=["Q1", "Q2", "Q3"],
+        datasets=[
+            {"data": [10, 20, 30], "label": "Widgets"},
+            {"data": [5, 15, 10], "label": "Gadgets"},
+        ],
+    )
+    ```
     """
 
     def __init__(

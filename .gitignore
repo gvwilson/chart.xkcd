@@ -9,6 +9,9 @@ __pycache__/
 dist/
 .venv/
 
+# Marimo
+__marimo__
+
 # Built JS bundled into Python package
 src/chart_xkcd/static/chart.xkcd.min.js
 

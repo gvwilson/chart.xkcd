@@ -439,6 +439,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scatter/" class="md-nav__link">
         
   
@@ -686,7 +713,7 @@
           </tr>
       </tbody>
     </table>
-        <p>Example::</p>
+        <p>Example:</p>
 <div class="highlight"><pre><span></span><code>Pie(
     title=&quot;Browser Share&quot;,
     labels=[&quot;Chrome&quot;, &quot;Firefox&quot;, &quot;Safari&quot;],
@@ -744,7 +771,9 @@
 <span class="normal">44</span>
 <span class="normal">45</span>
 <span class="normal">46</span>
-<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Pie</span><span class="p">(</span><span class="n">_BaseChart</span><span class="p">):</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Pie</span><span class="p">(</span><span class="n">_BaseChart</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pie/donut chart.</span>
 
 <span class="sd">    Uses a single dataset. Only `datasets[0]` is rendered.</span>
@@ -764,14 +793,16 @@
 <span class="sd">            - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
 <span class="sd">            - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
 
-<span class="sd">    Example::</span>
+<span class="sd">    Example:</span>
 
-<span class="sd">        Pie(</span>
-<span class="sd">            title=&quot;Browser Share&quot;,</span>
-<span class="sd">            labels=[&quot;Chrome&quot;, &quot;Firefox&quot;, &quot;Safari&quot;],</span>
-<span class="sd">            datasets=[{&quot;data&quot;: [60, 20, 20]}],</span>
-<span class="sd">            options={&quot;innerRadius&quot;: 0.5},</span>
-<span class="sd">        )</span>
+<span class="sd">    ```</span>
+<span class="sd">    Pie(</span>
+<span class="sd">        title=&quot;Browser Share&quot;,</span>
+<span class="sd">        labels=[&quot;Chrome&quot;, &quot;Firefox&quot;, &quot;Safari&quot;],</span>
+<span class="sd">        datasets=[{&quot;data&quot;: [60, 20, 20]}],</span>
+<span class="sd">        options={&quot;innerRadius&quot;: 0.5},</span>
+<span class="sd">    )</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>

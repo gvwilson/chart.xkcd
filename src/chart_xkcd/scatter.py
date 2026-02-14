@@ -31,18 +31,20 @@ class Scatter(_AxisChart):
             - `backgroundColor` (str): Background color (default `'white'`).
             - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
-    Example::
+    Example:
 
-        XY(
-            title="Scatter",
-            x_label="X",
-            y_label="Y",
-            datasets=[{
-                "label": "Series A",
-                "data": [{"x": 1, "y": 2}, {"x": 3, "y": 5}, {"x": 7, "y": 11}],
-            }],
-            options={"showLine": True, "dotSize": 2},
-        )
+    ```
+    Scatter(
+        title="Scatter",
+        x_label="X",
+        y_label="Y",
+        datasets=[{
+            "label": "Series A",
+            "data": [{"x": 1, "y": 2}, {"x": 3, "y": 5}, {"x": 7, "y": 11}],
+        }],
+        options={"showLine": True, "dotSize": 2},
+    )
+    ```
     """
 
     def __init__(

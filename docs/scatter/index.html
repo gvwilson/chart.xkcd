@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../radar/">
+        <link rel="prev" href="../renderer/">
       
       
         <link rel="next" href="../stacked_bar/">
@@ -371,6 +371,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -708,8 +735,8 @@ an optional <code>color</code> (str) key.</p>
           </tr>
       </tbody>
     </table>
-        <p>Example::</p>
-<div class="highlight"><pre><span></span><code>XY(
+        <p>Example:</p>
+<div class="highlight"><pre><span></span><code>Scatter(
     title=&quot;Scatter&quot;,
     x_label=&quot;X&quot;,
     y_label=&quot;Y&quot;,
@@ -794,7 +821,9 @@ an optional <code>color</code> (str) key.</p>
 <span class="normal">68</span>
 <span class="normal">69</span>
 <span class="normal">70</span>
-<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scatter</span><span class="p">(</span><span class="n">_AxisChart</span><span class="p">):</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scatter</span><span class="p">(</span><span class="n">_AxisChart</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;XY scatter/line chart with numeric or temporal x-axis.</span>
 
 <span class="sd">    Unlike other axis charts, XY does not use a `labels` array.  Each</span>
@@ -821,18 +850,20 @@ an optional <code>color</code> (str) key.</p>
 <span class="sd">            - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
 <span class="sd">            - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
 
-<span class="sd">    Example::</span>
+<span class="sd">    Example:</span>
 
-<span class="sd">        XY(</span>
-<span class="sd">            title=&quot;Scatter&quot;,</span>
-<span class="sd">            x_label=&quot;X&quot;,</span>
-<span class="sd">            y_label=&quot;Y&quot;,</span>
-<span class="sd">            datasets=[{</span>
-<span class="sd">                &quot;label&quot;: &quot;Series A&quot;,</span>
-<span class="sd">                &quot;data&quot;: [{&quot;x&quot;: 1, &quot;y&quot;: 2}, {&quot;x&quot;: 3, &quot;y&quot;: 5}, {&quot;x&quot;: 7, &quot;y&quot;: 11}],</span>
-<span class="sd">            }],</span>
-<span class="sd">            options={&quot;showLine&quot;: True, &quot;dotSize&quot;: 2},</span>
-<span class="sd">        )</span>
+<span class="sd">    ```</span>
+<span class="sd">    Scatter(</span>
+<span class="sd">        title=&quot;Scatter&quot;,</span>
+<span class="sd">        x_label=&quot;X&quot;,</span>
+<span class="sd">        y_label=&quot;Y&quot;,</span>
+<span class="sd">        datasets=[{</span>
+<span class="sd">            &quot;label&quot;: &quot;Series A&quot;,</span>
+<span class="sd">            &quot;data&quot;: [{&quot;x&quot;: 1, &quot;y&quot;: 2}, {&quot;x&quot;: 3, &quot;y&quot;: 5}, {&quot;x&quot;: 7, &quot;y&quot;: 11}],</span>
+<span class="sd">        }],</span>
+<span class="sd">        options={&quot;showLine&quot;: True, &quot;dotSize&quot;: 2},</span>
+<span class="sd">    )</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>

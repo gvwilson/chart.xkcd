@@ -439,6 +439,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scatter/" class="md-nav__link">
         
   
@@ -717,7 +744,7 @@ values), <code>label</code> (str), and an optional <code>color</code> (str) key.
           </tr>
       </tbody>
     </table>
-        <p>Example::</p>
+        <p>Example:</p>
 <div class="highlight"><pre><span></span><code>Line(
     title=&quot;Temperature&quot;,
     x_label=&quot;Day&quot;,
@@ -787,7 +814,9 @@ values), <code>label</code> (str), and an optional <code>color</code> (str) key.
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Line</span><span class="p">(</span><span class="n">_AxisChart</span><span class="p">):</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Line</span><span class="p">(</span><span class="n">_AxisChart</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Line chart for continuous data with one or more lines.</span>
 
 <span class="sd">    Args:</span>
@@ -807,18 +836,20 @@ values), <code>label</code> (str), and an optional <code>color</code> (str) key.
 <span class="sd">            - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
 <span class="sd">            - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
 
-<span class="sd">    Example::</span>
+<span class="sd">    Example:</span>
 
-<span class="sd">        Line(</span>
-<span class="sd">            title=&quot;Temperature&quot;,</span>
-<span class="sd">            x_label=&quot;Day&quot;,</span>
-<span class="sd">            y_label=&quot;Degrees&quot;,</span>
-<span class="sd">            labels=[&quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;],</span>
-<span class="sd">            datasets=[</span>
-<span class="sd">                {&quot;data&quot;: [65, 70, 68, 72], &quot;label&quot;: &quot;NYC&quot;},</span>
-<span class="sd">                {&quot;data&quot;: [80, 82, 79, 85], &quot;label&quot;: &quot;LA&quot;},</span>
-<span class="sd">            ],</span>
-<span class="sd">        )</span>
+<span class="sd">    ```</span>
+<span class="sd">    Line(</span>
+<span class="sd">        title=&quot;Temperature&quot;,</span>
+<span class="sd">        x_label=&quot;Day&quot;,</span>
+<span class="sd">        y_label=&quot;Degrees&quot;,</span>
+<span class="sd">        labels=[&quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;],</span>
+<span class="sd">        datasets=[</span>
+<span class="sd">            {&quot;data&quot;: [65, 70, 68, 72], &quot;label&quot;: &quot;NYC&quot;},</span>
+<span class="sd">            {&quot;data&quot;: [80, 82, 79, 85], &quot;label&quot;: &quot;LA&quot;},</span>
+<span class="sd">        ],</span>
+<span class="sd">    )</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>

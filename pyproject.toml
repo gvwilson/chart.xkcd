@@ -8,6 +8,9 @@ version = "0.1.0"
 description = "Python API for generating xkcd-style charts"
 license = "MIT"
 requires-python = ">=3.13"
+dependencies = [
+    "marimo>=0.19.11",
+]
 
 [project.scripts]
 chart_xkcd = "chart_xkcd.main:main"
@@ -39,7 +42,12 @@ dev = [
 
 [tool.taskipy.tasks]
 build = {help = "build package", cmd = "cd js && npm run build && cd - && python -m build"}
-lint = {help = "check code issues", cmd = "ruff check . && cd js && npm run lint"}
+lint = {help = "check code issues", cmd = """
+ruff check . &&
+ty check . &&
+cd js &&
+npm run lint
+"""}
 clean = {help = "clean up", cmd = """
 rm -rf ./dist &&
 rm -rf ./js/dist &&
@@ -51,13 +59,14 @@ mkdocs build &&
 touch docs/.nojekyll &&
 cp docs-requirements.txt docs/requirements.txt
 """}
-fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}
-format = {help = "format Python code", cmd = "ruff format ."}
-js_examples = {help = "run server to view JS examples", cmd = "cd js && npm start"}
-py_examples = {help = "re-create HTML files using Python", cmd = """
+ex_js = {help = "run server to view JS examples", cmd = "cd js && npm start"}
+ex_py = {help = "re-create HTML files using Python", cmd = """
 for file in examples/*.py
 do
     name=$(basename "$file" .py)
     python "$file" "examples/$name.html"
 done
 """}
+fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}
+format = {help = "format Python code", cmd = "ruff format ."}
+publish = {help = "publish using ~/.pypirc credentials", cmd = "twine upload --verbose dist/*"}

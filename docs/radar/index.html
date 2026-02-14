@@ -12,7 +12,7 @@
         <link rel="prev" href="../pie/">
       
       
-        <link rel="next" href="../scatter/">
+        <link rel="next" href="../renderer/">
       
       
         
@@ -439,6 +439,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../scatter/" class="md-nav__link">
         
   
@@ -690,7 +717,7 @@ values, one per label), <code>label</code> (str), and an optional
           </tr>
       </tbody>
     </table>
-        <p>Example::</p>
+        <p>Example:</p>
 <div class="highlight"><pre><span></span><code>Radar(
     title=&quot;Skills&quot;,
     labels=[&quot;JavaScript&quot;, &quot;Python&quot;, &quot;Go&quot;, &quot;Rust&quot;, &quot;SQL&quot;],
@@ -758,7 +785,9 @@ values, one per label), <code>label</code> (str), and an optional
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Radar</span><span class="p">(</span><span class="n">_BaseChart</span><span class="p">):</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Radar</span><span class="p">(</span><span class="n">_BaseChart</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Radar/spider chart for multi-dimensional data.</span>
 
 <span class="sd">    Each label defines an axis radiating from the center.  Multiple</span>
@@ -782,17 +811,19 @@ values, one per label), <code>label</code> (str), and an optional
 <span class="sd">            - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
 <span class="sd">            - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
 
-<span class="sd">    Example::</span>
+<span class="sd">    Example:</span>
 
-<span class="sd">        Radar(</span>
-<span class="sd">            title=&quot;Skills&quot;,</span>
-<span class="sd">            labels=[&quot;JavaScript&quot;, &quot;Python&quot;, &quot;Go&quot;, &quot;Rust&quot;, &quot;SQL&quot;],</span>
-<span class="sd">            datasets=[</span>
-<span class="sd">                {&quot;data&quot;: [8, 9, 5, 3, 7], &quot;label&quot;: &quot;Developer A&quot;},</span>
-<span class="sd">                {&quot;data&quot;: [6, 7, 8, 6, 5], &quot;label&quot;: &quot;Developer B&quot;},</span>
-<span class="sd">            ],</span>
-<span class="sd">            options={&quot;showLabels&quot;: True, &quot;showLegend&quot;: True},</span>
-<span class="sd">        )</span>
+<span class="sd">    ```</span>
+<span class="sd">    Radar(</span>
+<span class="sd">        title=&quot;Skills&quot;,</span>
+<span class="sd">        labels=[&quot;JavaScript&quot;, &quot;Python&quot;, &quot;Go&quot;, &quot;Rust&quot;, &quot;SQL&quot;],</span>
+<span class="sd">        datasets=[</span>
+<span class="sd">            {&quot;data&quot;: [8, 9, 5, 3, 7], &quot;label&quot;: &quot;Developer A&quot;},</span>
+<span class="sd">            {&quot;data&quot;: [6, 7, 8, 6, 5], &quot;label&quot;: &quot;Developer B&quot;},</span>
+<span class="sd">        ],</span>
+<span class="sd">        options={&quot;showLabels&quot;: True, &quot;showLegend&quot;: True},</span>
+<span class="sd">    )</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>

@@ -3,6 +3,7 @@
 import json
 from importlib.resources import files
 from pathlib import Path
+from .charts import _BaseChart
 
 _TEMPLATE = """\
 <!DOCTYPE html>
@@ -34,17 +35,25 @@ def _bundled_js():
     )
 
 
-def render(
-    chart,
-    output_path,
-    chart_js_url=None,
-    width=600,
-    height=400,
-):
-    """Render a chart to a self-contained HTML file.
+def to_html(
+    chart: _BaseChart,
+    chart_js_url: str | None = None,
+    width: int = 600,
+    height: int = 400,
+) -> str:
+    """Return self-contained HTML for a chart as a string.
 
     If chart_js_url is provided, the HTML will load the JS from that URL.
     Otherwise, the bundled JS is inlined directly into the HTML.
+
+    Args:
+        chart: chart to convert.
+        chart_js_url: URL to load JavaScript from. If missing, JS is inlined.
+        width: chart width in pixels.
+        height: chart height in pixels.
+
+    Returns:
+        HTML as text.
     """
     if chart_js_url:
         script_tag = f'<script src="{chart_js_url}"></script>'
@@ -53,7 +62,7 @@ def render(
 
     chart_type = type(chart).__name__
     config = json.dumps(chart.to_dict(), indent=2)
-    html = _TEMPLATE.format(
+    return _TEMPLATE.format(
         title=chart.title or "",
         script_tag=script_tag,
         width=width,
@@ -61,4 +70,27 @@ def render(
         chart_type=chart_type,
         config=config,
     )
-    Path(output_path).write_text(html)
+
+
+def render(
+    chart: _BaseChart,
+    output_path: Path | str,
+    chart_js_url: str | None = None,
+    width: int = 600,
+    height: int = 400,
+) -> None:
+    """Render a chart to a self-contained HTML file.
+
+    If chart_js_url is provided, the HTML will load the JS from that URL.
+    Otherwise, the bundled JS is inlined directly into the HTML.
+
+    Args:
+        chart: chart to render.
+        output_path: where to write result.
+        chart_js_url: URL to load JavaScript from. If missing, JS is inlined.
+        width: chart width in pixels.
+        height: chart height in pixels.
+    """
+    Path(output_path).write_text(
+        to_html(chart, chart_js_url=chart_js_url, width=width, height=height)
+    )

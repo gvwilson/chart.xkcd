@@ -24,15 +24,17 @@ class Bar(_AxisChart):
             - `backgroundColor` (str): Background color (default `'white'`).
             - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
-    Example::
+    Example:
 
-        Bar(
-            title="Monthly Sales",
-            x_label="Month",
-            y_label="Revenue",
-            labels=["Jan", "Feb", "Mar"],
-            datasets=[{"data": [10, 20, 30]}],
-        )
+    ```
+    Bar(
+        title="Monthly Sales",
+        x_label="Month",
+        y_label="Revenue",
+        labels=["Jan", "Feb", "Mar"],
+        datasets=[{"data": [10, 20, 30]}],
+    )
+    ```
     """
 
     def __init__(

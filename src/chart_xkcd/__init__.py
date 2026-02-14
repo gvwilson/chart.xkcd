@@ -7,4 +7,4 @@ from .radar import Radar as Radar
 from .scatter import Scatter as Scatter
 from .stacked_bar import StackedBar as StackedBar
 from .config import positionType as positionType
-from .renderer import render as render
+from .renderer import render as render, to_html as to_html

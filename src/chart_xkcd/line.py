@@ -24,18 +24,20 @@ class Line(_AxisChart):
             - `backgroundColor` (str): Background color (default `'white'`).
             - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
-    Example::
+    Example:
 
-        Line(
-            title="Temperature",
-            x_label="Day",
-            y_label="Degrees",
-            labels=["Mon", "Tue", "Wed", "Thu"],
-            datasets=[
-                {"data": [65, 70, 68, 72], "label": "NYC"},
-                {"data": [80, 82, 79, 85], "label": "LA"},
-            ],
-        )
+    ```
+    Line(
+        title="Temperature",
+        x_label="Day",
+        y_label="Degrees",
+        labels=["Mon", "Tue", "Wed", "Thu"],
+        datasets=[
+            {"data": [65, 70, 68, 72], "label": "NYC"},
+            {"data": [80, 82, 79, 85], "label": "LA"},
+        ],
+    )
+    ```
     """
 
     def __init__(

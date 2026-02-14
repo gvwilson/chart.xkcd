@@ -28,17 +28,19 @@ class Radar(_BaseChart):
             - `backgroundColor` (str): Background color (default `'white'`).
             - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
-    Example::
+    Example:
 
-        Radar(
-            title="Skills",
-            labels=["JavaScript", "Python", "Go", "Rust", "SQL"],
-            datasets=[
-                {"data": [8, 9, 5, 3, 7], "label": "Developer A"},
-                {"data": [6, 7, 8, 6, 5], "label": "Developer B"},
-            ],
-            options={"showLabels": True, "showLegend": True},
-        )
+    ```
+    Radar(
+        title="Skills",
+        labels=["JavaScript", "Python", "Go", "Rust", "SQL"],
+        datasets=[
+            {"data": [8, 9, 5, 3, 7], "label": "Developer A"},
+            {"data": [6, 7, 8, 6, 5], "label": "Developer B"},
+        ],
+        options={"showLabels": True, "showLegend": True},
+    )
+    ```
     """
 
     def __init__(

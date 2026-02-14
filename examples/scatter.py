@@ -1,9 +1,9 @@
 """Example: XY scatter chart."""
 
 import sys
-from chart_xkcd import XY, positionType, render
+from chart_xkcd import Scatter, positionType, render
 
-chart = XY(
+chart = Scatter(
     title="Pokemon Comparison",
     x_label="Attack",
     y_label="Defense",

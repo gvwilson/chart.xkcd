@@ -24,14 +24,16 @@ class Pie(_BaseChart):
             - `backgroundColor` (str): Background color (default `'white'`).
             - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
-    Example::
+    Example:
 
-        Pie(
-            title="Browser Share",
-            labels=["Chrome", "Firefox", "Safari"],
-            datasets=[{"data": [60, 20, 20]}],
-            options={"innerRadius": 0.5},
-        )
+    ```
+    Pie(
+        title="Browser Share",
+        labels=["Chrome", "Firefox", "Safari"],
+        datasets=[{"data": [60, 20, 20]}],
+        options={"innerRadius": 0.5},
+    )
+    ```
     """
 
     def __init__(

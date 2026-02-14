@@ -1,5 +1,3 @@
-// import chartXkcd from 'chart.xkcd';
-// import chartXkcd from '../../dist/chart.xkcd';
 import chartXkcd from '../src';
 
 const svg = document.querySelector('.bar-chart');

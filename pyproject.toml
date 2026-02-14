@@ -40,3 +40,11 @@ find . -path './.venv' -prune -o -type f -name '*~' -exec rm {} +
 """}
 fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}
 format = {help = "format Python code", cmd = "ruff format ."}
+js_examples = {help = "run server to view JS examples", cmd = "cd js && npm start"}
+py_examples = {help = "re-create HTML files using Python", cmd = """
+for file in examples/*.py
+do
+    name=$(basename "$file" .py)
+    python "$file" "examples/$name.html"
+done
+"""}

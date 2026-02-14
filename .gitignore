@@ -12,6 +12,9 @@ dist/
 # Built JS bundled into Python package
 src/chart_xkcd/static/chart.xkcd.min.js
 
+# Python-generated HTML files
+examples/*.html
+
 # Miscellaneous
 *~
 .DS_Store

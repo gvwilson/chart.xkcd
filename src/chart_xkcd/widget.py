@@ -6,7 +6,7 @@ from importlib.resources import files
 import anywidget
 import traitlets
 
-_WIDGET_JS = files("chart_xkcd").joinpath("static", "widget.js")
+_WIDGET_JS = files("chart_xkcd").joinpath("static", "chart.xkcd.js")
 
 
 class ChartWidget(anywidget.AnyWidget):

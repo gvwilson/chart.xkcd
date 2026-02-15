@@ -9,7 +9,7 @@ from pathlib import Path
 def main():
     """Entry point for command-line driver."""
     args = _parse_args()
-    source = files("chart_xkcd") / "static" / "chart.xkcd.min.js"
+    source = files("chart_xkcd") / "static" / "chart.xkcd.js"
     with as_file(source) as src_path:
         shutil.copy2(src_path, Path(args.out))
 

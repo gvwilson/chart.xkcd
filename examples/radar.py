@@ -18,4 +18,4 @@ chart = Radar(
     },
 )
 
-render(chart, sys.argv[1], chart_js_url="/src/chart_xkcd/static/chart.xkcd.min.js")
+render(chart, sys.argv[1], chart_js_url="/src/chart_xkcd/static/chart.xkcd.js")

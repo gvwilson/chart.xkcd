@@ -13,8 +13,7 @@ dist/
 __marimo__
 
 # Built JS bundled into Python package
-src/chart_xkcd/static/chart.xkcd.min.js
-src/chart_xkcd/static/widget.js
+src/chart_xkcd/static/chart.xkcd.js
 
 # Python-generated HTML files
 examples/*.html

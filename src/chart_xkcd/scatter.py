@@ -5,9 +5,9 @@ from .charts import _AxisChart
 
 
 class Scatter(_AxisChart):
-    """XY scatter/line chart with numeric or temporal x-axis.
+    """Scatter plot with numeric or temporal x-axis.
 
-    Unlike other axis charts, XY does not use a `labels` array.  Each
+    Unlike other axis charts, Scatter does not use a `labels` array.  Each
     dataset contains `{x, y}` points directly.
 
     Args:
@@ -57,14 +57,14 @@ class Scatter(_AxisChart):
         options: Any = None,
     ):
         if not isinstance(datasets, (list, tuple)) or len(datasets) == 0:
-            raise ValueError("XY: datasets must be a non-empty list")
+            raise ValueError("Scatter: datasets must be a non-empty list")
         for i, ds in enumerate(datasets):
             if not isinstance(ds, dict) or "data" not in ds:
-                raise ValueError(f"XY: datasets[{i}] must be a dict with a 'data' key")
+                raise ValueError(f"Scatter: datasets[{i}] must be a dict with a 'data' key")
             for j, pt in enumerate(ds["data"]):
                 if not isinstance(pt, dict) or "x" not in pt or "y" not in pt:
                     raise ValueError(
-                        f"XY: datasets[{i}].data[{j}] must be a dict "
+                        f"Scatter: datasets[{i}].data[{j}] must be a dict "
                         f"with 'x' and 'y' keys"
                     )
         data = {"datasets": list(datasets)}

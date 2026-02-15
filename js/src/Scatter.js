@@ -16,7 +16,7 @@ const margin = {
   top: 50, right: 30, bottom: 50, left: 50,
 };
 
-class XY {
+class Scatter {
   constructor(svg, {
     title, xLabel, yLabel, data: { datasets }, options,
   }) {
@@ -248,4 +248,4 @@ class XY {
   }
 }
 
-export default XY;
+export default Scatter;

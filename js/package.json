@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "audit": "npm audit",
-    "build": "esbuild src/index.js --bundle --platform=browser --format=iife --global-name=chartXkcd --outfile=../src/chart_xkcd/static/chart.xkcd.min.js",
+    "build": "esbuild src/index.js --bundle --platform=browser --format=iife --global-name=chartXkcd --outfile=../src/chart_xkcd/static/chart.xkcd.min.js && esbuild src/widget.js --bundle --platform=browser --format=esm --outfile=../src/chart_xkcd/static/widget.js",
     "start": "esbuild examples/index.js --bundle --servedir=examples --outdir=examples",
     "lint": "./node_modules/.bin/eslint ./src"
   },

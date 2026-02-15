@@ -9,6 +9,7 @@ description = "Python API for generating xkcd-style charts"
 license = "MIT"
 requires-python = ">=3.13"
 dependencies = [
+    "anywidget>=0.9.0",
     "marimo>=0.19.11",
 ]
 
@@ -19,12 +20,14 @@ chart_xkcd = "chart_xkcd.main:main"
 packages = ["src/chart_xkcd"]
 artifacts = [
     "src/chart_xkcd/static/chart.xkcd.min.js",
+    "src/chart_xkcd/static/widget.js",
 ]
 
 # For sdist, explicitly include these
 [tool.hatch.build.targets.sdist]
 artifacts = [
     "src/chart_xkcd/static/chart.xkcd.min.js",
+    "src/chart_xkcd/static/widget.js",
 ]
 
 [dependency-groups]

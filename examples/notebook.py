@@ -6,14 +6,13 @@ app = marimo.App()
 
 @app.cell
 def _():
-    import marimo as mo
-    from chart_xkcd import Bar, to_html
+    from chart_xkcd import Bar, to_widget
 
-    return Bar, mo, to_html
+    return Bar, to_widget
 
 
 @app.cell
-def _(Bar, mo, to_html):
+def _(Bar, to_widget):
     chart = Bar(
         title="Github Stars vs Patron Count",
         x_label="Project",
@@ -21,7 +20,7 @@ def _(Bar, mo, to_html):
         labels=["chart.xkcd", "star-history", "tomato-pie"],
         datasets=[{"data": [2100, 430, 90]}],
     )
-    mo.iframe(to_html(chart))
+    to_widget(chart)
     return
 
 

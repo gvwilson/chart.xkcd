@@ -16,15 +16,18 @@ class StackedBar(_AxisChart):
         labels: Category names for the x-axis.
         datasets: List of dataset dicts, each with `data` (list of numeric
             values) and `label` (str) keys.
-        options: Dict of chart options:
-            - `yTickCount` (int): Number of y-axis ticks (default 3).
-            - `legendPosition` (int): Legend placement (use `positionType`).
-            - `showLegend` (bool): Show legend (default True).
-            - `dataColors` (list[str]): Segment colors.
-            - `fontFamily` (str): Font family (default `'xkcd'`).
-            - `strokeColor` (str): Axis/border color (default `'black'`).
-            - `backgroundColor` (str): Background color (default `'white'`).
-            - `unxkcdify` (bool): Disable hand-drawn style (default False).
+        options: Dict of chart options.
+
+    Options:
+
+    - `backgroundColor` (str): Background color (default `'white'`).
+    - `dataColors` (list[str]): Segment colors.
+    - `fontFamily` (str): Font family (default `'xkcd'`).
+    - `legendPosition` (int): Legend placement (use `positionType`).
+    - `showLegend` (bool): Show legend (default True).
+    - `strokeColor` (str): Axis/border color (default `'black'`).
+    - `unxkcdify` (bool): Disable hand-drawn style (default False).
+    - `yTickCount` (int): Number of y-axis ticks (default 3).
 
     Example:
 

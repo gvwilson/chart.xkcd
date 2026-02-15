@@ -17,19 +17,22 @@ class Scatter(_AxisChart):
         datasets: List of dataset dicts, each with `data` (list of
             `{"x": number, "y": number}` dicts), `label` (str), and
             an optional `color` (str) key.
-        options: Dict of chart options:
-            - `dotSize` (float): Point size multiplier (default 1).
-            - `showLine` (bool): Connect dots with lines (default False).
-            - `timeFormat` (str): dayjs format string for temporal x-axis.
-            - `xTickCount` (int): Number of x-axis ticks (default 3).
-            - `yTickCount` (int): Number of y-axis ticks (default 3).
-            - `legendPosition` (int): Legend placement (use `positionType`).
-            - `showLegend` (bool): Show legend (default True).
-            - `dataColors` (list[str]): Point/line colors.
-            - `fontFamily` (str): Font family (default `'xkcd'`).
-            - `strokeColor` (str): Axis/border color (default `'black'`).
-            - `backgroundColor` (str): Background color (default `'white'`).
-            - `unxkcdify` (bool): Disable hand-drawn style (default False).
+        options: Dict of chart options.
+
+    Options:
+
+    - `backgroundColor` (str): Background color (default `'white'`).
+    - `dataColors` (list[str]): Point/line colors.
+    - `dotSize` (float): Point size multiplier (default 1).
+    - `fontFamily` (str): Font family (default `'xkcd'`).
+    - `legendPosition` (int): Legend placement (use `positionType`).
+    - `showLegend` (bool): Show legend (default True).
+    - `showLine` (bool): Connect dots with lines (default False).
+    - `strokeColor` (str): Axis/border color (default `'black'`).
+    - `timeFormat` (str): dayjs format string for temporal x-axis.
+    - `unxkcdify` (bool): Disable hand-drawn style (default False).
+    - `xTickCount` (int): Number of x-axis ticks (default 3).
+    - `yTickCount` (int): Number of y-axis ticks (default 3).
 
     Example:
 

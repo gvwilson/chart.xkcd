@@ -16,17 +16,20 @@ class Radar(_BaseChart):
         datasets: List of dataset dicts, each with `data` (list of numeric
             values, one per label), `label` (str), and an optional
             `color` (str) key.
-        options: Dict of chart options:
-            - `showLabels` (bool): Show axis labels (default False).
-            - `ticksCount` (int): Number of grid rings (default 3).
-            - `dotSize` (float): Point size multiplier (default 1).
-            - `legendPosition` (int): Legend placement (use `positionType`).
-            - `showLegend` (bool): Show legend (default False).
-            - `dataColors` (list[str]): Dataset colors.
-            - `fontFamily` (str): Font family (default `'xkcd'`).
-            - `strokeColor` (str): Grid/border color (default `'black'`).
-            - `backgroundColor` (str): Background color (default `'white'`).
-            - `unxkcdify` (bool): Disable hand-drawn style (default False).
+        options: Dict of chart options.
+
+    Options:
+
+    - `backgroundColor` (str): Background color (default `'white'`).
+    - `dataColors` (list[str]): Dataset colors.
+    - `dotSize` (float): Point size multiplier (default 1).
+    - `fontFamily` (str): Font family (default `'xkcd'`).
+    - `legendPosition` (int): Legend placement (use `positionType`).
+    - `showLabels` (bool): Show axis labels (default False).
+    - `showLegend` (bool): Show legend (default False).
+    - `strokeColor` (str): Grid/border color (default `'black'`).
+    - `ticksCount` (int): Number of grid rings (default 3).
+    - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
     Example:
 

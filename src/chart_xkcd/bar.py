@@ -16,13 +16,16 @@ class Bar(_AxisChart):
         labels: Category names for the x-axis.
         datasets: List containing one dataset dict with a `data` key
             (list of numeric values) and an optional `label` key.
-        options: Dict of chart options:
-            - `yTickCount` (int): Number of y-axis ticks (default 3).
-            - `dataColors` (list[str]): Bar colors.
-            - `fontFamily` (str): Font family (default `'xkcd'`).
-            - `strokeColor` (str): Axis/border color (default `'black'`).
-            - `backgroundColor` (str): Background color (default `'white'`).
-            - `unxkcdify` (bool): Disable hand-drawn style (default False).
+        options: Dict of chart options.
+
+    Options:
+
+    - `backgroundColor` (str): Background color (default `'white'`).
+    - `dataColors` (list[str]): Bar colors.
+    - `fontFamily` (str): Font family (default `'xkcd'`).
+    - `strokeColor` (str): Axis/border color (default `'black'`).
+    - `unxkcdify` (bool): Disable hand-drawn style (default False).
+    - `yTickCount` (int): Number of y-axis ticks (default 3).
 
     Example:
 

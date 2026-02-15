@@ -623,8 +623,8 @@
 
 
 
-        <p>XY scatter/line chart with numeric or temporal x-axis.</p>
-<p>Unlike other axis charts, XY does not use a <code>labels</code> array.  Each
+        <p>Scatter plot with numeric or temporal x-axis.</p>
+<p>Unlike other axis charts, Scatter does not use a <code>labels</code> array.  Each
 dataset contains <code>{x, y}</code> points directly.</p>
 
 
@@ -714,19 +714,7 @@ an optional <code>color</code> (str) key.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict of chart options:
-- <code>dotSize</code> (float): Point size multiplier (default 1).
-- <code>showLine</code> (bool): Connect dots with lines (default False).
-- <code>timeFormat</code> (str): dayjs format string for temporal x-axis.
-- <code>xTickCount</code> (int): Number of x-axis ticks (default 3).
-- <code>yTickCount</code> (int): Number of y-axis ticks (default 3).
-- <code>legendPosition</code> (int): Legend placement (use <code>positionType</code>).
-- <code>showLegend</code> (bool): Show legend (default True).
-- <code>dataColors</code> (list[str]): Point/line colors.
-- <code>fontFamily</code> (str): Font family (default <code>'xkcd'</code>).
-- <code>strokeColor</code> (str): Axis/border color (default <code>'black'</code>).
-- <code>backgroundColor</code> (str): Background color (default <code>'white'</code>).
-- <code>unxkcdify</code> (bool): Disable hand-drawn style (default False).</p>
+                <p>Dict of chart options.</p>
               </div>
             </td>
             <td>
@@ -735,7 +723,22 @@ an optional <code>color</code> (str) key.</p>
           </tr>
       </tbody>
     </table>
-        <p>Example:</p>
+        <p>Options:</p>
+<ul>
+<li><code>backgroundColor</code> (str): Background color (default <code>'white'</code>).</li>
+<li><code>dataColors</code> (list[str]): Point/line colors.</li>
+<li><code>dotSize</code> (float): Point size multiplier (default 1).</li>
+<li><code>fontFamily</code> (str): Font family (default <code>'xkcd'</code>).</li>
+<li><code>legendPosition</code> (int): Legend placement (use <code>positionType</code>).</li>
+<li><code>showLegend</code> (bool): Show legend (default True).</li>
+<li><code>showLine</code> (bool): Connect dots with lines (default False).</li>
+<li><code>strokeColor</code> (str): Axis/border color (default <code>'black'</code>).</li>
+<li><code>timeFormat</code> (str): dayjs format string for temporal x-axis.</li>
+<li><code>unxkcdify</code> (bool): Disable hand-drawn style (default False).</li>
+<li><code>xTickCount</code> (int): Number of x-axis ticks (default 3).</li>
+<li><code>yTickCount</code> (int): Number of y-axis ticks (default 3).</li>
+</ul>
+<p>Example:</p>
 <div class="highlight"><pre><span></span><code>Scatter(
     title=&quot;Scatter&quot;,
     x_label=&quot;X&quot;,
@@ -823,10 +826,13 @@ an optional <code>color</code> (str) key.</p>
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
-<span class="normal">73</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scatter</span><span class="p">(</span><span class="n">_AxisChart</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;XY scatter/line chart with numeric or temporal x-axis.</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Scatter</span><span class="p">(</span><span class="n">_AxisChart</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scatter plot with numeric or temporal x-axis.</span>
 
-<span class="sd">    Unlike other axis charts, XY does not use a `labels` array.  Each</span>
+<span class="sd">    Unlike other axis charts, Scatter does not use a `labels` array.  Each</span>
 <span class="sd">    dataset contains `{x, y}` points directly.</span>
 
 <span class="sd">    Args:</span>
@@ -836,19 +842,22 @@ an optional <code>color</code> (str) key.</p>
 <span class="sd">        datasets: List of dataset dicts, each with `data` (list of</span>
 <span class="sd">            `{&quot;x&quot;: number, &quot;y&quot;: number}` dicts), `label` (str), and</span>
 <span class="sd">            an optional `color` (str) key.</span>
-<span class="sd">        options: Dict of chart options:</span>
-<span class="sd">            - `dotSize` (float): Point size multiplier (default 1).</span>
-<span class="sd">            - `showLine` (bool): Connect dots with lines (default False).</span>
-<span class="sd">            - `timeFormat` (str): dayjs format string for temporal x-axis.</span>
-<span class="sd">            - `xTickCount` (int): Number of x-axis ticks (default 3).</span>
-<span class="sd">            - `yTickCount` (int): Number of y-axis ticks (default 3).</span>
-<span class="sd">            - `legendPosition` (int): Legend placement (use `positionType`).</span>
-<span class="sd">            - `showLegend` (bool): Show legend (default True).</span>
-<span class="sd">            - `dataColors` (list[str]): Point/line colors.</span>
-<span class="sd">            - `fontFamily` (str): Font family (default `&#39;xkcd&#39;`).</span>
-<span class="sd">            - `strokeColor` (str): Axis/border color (default `&#39;black&#39;`).</span>
-<span class="sd">            - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
-<span class="sd">            - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
+<span class="sd">        options: Dict of chart options.</span>
+
+<span class="sd">    Options:</span>
+
+<span class="sd">    - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
+<span class="sd">    - `dataColors` (list[str]): Point/line colors.</span>
+<span class="sd">    - `dotSize` (float): Point size multiplier (default 1).</span>
+<span class="sd">    - `fontFamily` (str): Font family (default `&#39;xkcd&#39;`).</span>
+<span class="sd">    - `legendPosition` (int): Legend placement (use `positionType`).</span>
+<span class="sd">    - `showLegend` (bool): Show legend (default True).</span>
+<span class="sd">    - `showLine` (bool): Connect dots with lines (default False).</span>
+<span class="sd">    - `strokeColor` (str): Axis/border color (default `&#39;black&#39;`).</span>
+<span class="sd">    - `timeFormat` (str): dayjs format string for temporal x-axis.</span>
+<span class="sd">    - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
+<span class="sd">    - `xTickCount` (int): Number of x-axis ticks (default 3).</span>
+<span class="sd">    - `yTickCount` (int): Number of y-axis ticks (default 3).</span>
 
 <span class="sd">    Example:</span>
 
@@ -876,14 +885,14 @@ an optional <code>color</code> (str) key.</p>
         <span class="n">options</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">datasets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;XY: datasets must be a non-empty list&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scatter: datasets must be a non-empty list&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ds</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datasets</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;data&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;XY: datasets[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] must be a dict with a &#39;data&#39; key&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scatter: datasets[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] must be a dict with a &#39;data&#39; key&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">pt</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;x&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pt</span> <span class="ow">or</span> <span class="s2">&quot;y&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pt</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;XY: datasets[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">].data[</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">] must be a dict &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Scatter: datasets[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">].data[</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">] must be a dict &quot;</span>
                         <span class="sa">f</span><span class="s2">&quot;with &#39;x&#39; and &#39;y&#39; keys&quot;</span>
                     <span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;datasets&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">datasets</span><span class="p">)}</span>

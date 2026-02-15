@@ -633,16 +633,14 @@
 
 
 <h2 id="chart_xkcd.renderer.render" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">render</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">chart_js_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">render</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">chart_js_url</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Render a chart to a self-contained HTML file.</p>
-<p>If chart_js_url is provided, the HTML will load the JS from that URL.
-Otherwise, the bundled JS is inlined directly into the HTML.</p>
+        <p>Render a chart to an HTML file.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -693,15 +691,15 @@ Otherwise, the bundled JS is inlined directly into the HTML.</p>
                 <code>chart_js_url</code>
             </td>
             <td>
-                  <code><span title="str">str</span> | None</code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>URL to load JavaScript from. If missing, JS is inlined.</p>
+                <p>URL to load the chart.xkcd JavaScript module from.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -742,43 +740,37 @@ Otherwise, the bundled JS is inlined directly into the HTML.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/chart_xkcd/renderer.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span>
     <span class="n">chart</span><span class="p">:</span> <span class="n">_BaseChart</span><span class="p">,</span>
     <span class="n">output_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">chart_js_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">chart_js_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a chart to a self-contained HTML file.</span>
-
-<span class="sd">    If chart_js_url is provided, the HTML will load the JS from that URL.</span>
-<span class="sd">    Otherwise, the bundled JS is inlined directly into the HTML.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a chart to an HTML file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        chart: chart to render.</span>
 <span class="sd">        output_path: where to write result.</span>
-<span class="sd">        chart_js_url: URL to load JavaScript from. If missing, JS is inlined.</span>
+<span class="sd">        chart_js_url: URL to load the chart.xkcd JavaScript module from.</span>
 <span class="sd">        width: chart width in pixels.</span>
 <span class="sd">        height: chart height in pixels.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -795,16 +787,14 @@ Otherwise, the bundled JS is inlined directly into the HTML.</p>
 
 
 <h2 id="chart_xkcd.renderer.to_html" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">to_html</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">chart_js_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">to_html</span><span class="p">(</span><span class="n">chart</span><span class="p">,</span> <span class="n">chart_js_url</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Return self-contained HTML for a chart as a string.</p>
-<p>If chart_js_url is provided, the HTML will load the JS from that URL.
-Otherwise, the bundled JS is inlined directly into the HTML.</p>
+        <p>Return HTML for a chart as a string.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -839,15 +829,15 @@ Otherwise, the bundled JS is inlined directly into the HTML.</p>
                 <code>chart_js_url</code>
             </td>
             <td>
-                  <code><span title="str">str</span> | None</code>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>URL to load JavaScript from. If missing, JS is inlined.</p>
+                <p>URL to load the chart.xkcd JavaScript module from.</p>
               </div>
             </td>
             <td>
-                  <code>None</code>
+                <em>required</em>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -911,7 +901,16 @@ Otherwise, the bundled JS is inlined directly into the HTML.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/chart_xkcd/renderer.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
@@ -928,53 +927,28 @@ Otherwise, the bundled JS is inlined directly into the HTML.</p>
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_html</span><span class="p">(</span>
     <span class="n">chart</span><span class="p">:</span> <span class="n">_BaseChart</span><span class="p">,</span>
-    <span class="n">chart_js_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">chart_js_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return self-contained HTML for a chart as a string.</span>
-
-<span class="sd">    If chart_js_url is provided, the HTML will load the JS from that URL.</span>
-<span class="sd">    Otherwise, the bundled JS is inlined directly into the HTML.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return HTML for a chart as a string.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        chart: chart to convert.</span>
-<span class="sd">        chart_js_url: URL to load JavaScript from. If missing, JS is inlined.</span>
+<span class="sd">        chart_js_url: URL to load the chart.xkcd JavaScript module from.</span>
 <span class="sd">        width: chart width in pixels.</span>
 <span class="sd">        height: chart height in pixels.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        HTML as text.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">chart_js_url</span><span class="p">:</span>
-        <span class="n">script_tag</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;&lt;script src=&quot;</span><span class="si">{</span><span class="n">chart_js_url</span><span class="si">}</span><span class="s1">&quot;&gt;&lt;/script&gt;&#39;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">script_tag</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;script&gt;</span><span class="si">{</span><span class="n">_bundled_js</span><span class="p">()</span><span class="si">}</span><span class="s2">&lt;/script&gt;&quot;</span>
-
     <span class="n">chart_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">chart</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">chart</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="n">title</span><span class="o">=</span><span class="n">chart</span><span class="o">.</span><span class="n">title</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">script_tag</span><span class="o">=</span><span class="n">script_tag</span><span class="p">,</span>
+        <span class="n">chart_js_url</span><span class="o">=</span><span class="n">chart_js_url</span><span class="p">,</span>
         <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
         <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
         <span class="n">chart_type</span><span class="o">=</span><span class="n">chart_type</span><span class="p">,</span>

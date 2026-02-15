@@ -14,15 +14,18 @@ class Pie(_BaseChart):
         labels: Slice labels.
         datasets: List containing one dataset dict with a `data` key
             (list of numeric values).
-        options: Dict of chart options:
-            - `innerRadius` (float): 0 for pie, 0.5 for donut (default 0.5).
-            - `legendPosition` (int): Legend placement (use `positionType`).
-            - `showLegend` (bool): Show legend (default True).
-            - `dataColors` (list[str]): Slice colors.
-            - `fontFamily` (str): Font family (default `'xkcd'`).
-            - `strokeColor` (str): Border color (default `'black'`).
-            - `backgroundColor` (str): Background color (default `'white'`).
-            - `unxkcdify` (bool): Disable hand-drawn style (default False).
+        options: Dict of chart options.
+
+    Options:
+
+    - `backgroundColor` (str): Background color (default `'white'`).
+    - `dataColors` (list[str]): Slice colors.
+    - `fontFamily` (str): Font family (default `'xkcd'`).
+    - `innerRadius` (float): 0 for pie, 0.5 for donut (default 0.5).
+    - `legendPosition` (int): Legend placement (use `positionType`).
+    - `showLegend` (bool): Show legend (default True).
+    - `strokeColor` (str): Border color (default `'black'`).
+    - `unxkcdify` (bool): Disable hand-drawn style (default False).
 
     Example:
 

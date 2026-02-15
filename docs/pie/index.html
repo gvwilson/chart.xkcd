@@ -696,15 +696,7 @@
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Dict of chart options:
-- <code>innerRadius</code> (float): 0 for pie, 0.5 for donut (default 0.5).
-- <code>legendPosition</code> (int): Legend placement (use <code>positionType</code>).
-- <code>showLegend</code> (bool): Show legend (default True).
-- <code>dataColors</code> (list[str]): Slice colors.
-- <code>fontFamily</code> (str): Font family (default <code>'xkcd'</code>).
-- <code>strokeColor</code> (str): Border color (default <code>'black'</code>).
-- <code>backgroundColor</code> (str): Background color (default <code>'white'</code>).
-- <code>unxkcdify</code> (bool): Disable hand-drawn style (default False).</p>
+                <p>Dict of chart options.</p>
               </div>
             </td>
             <td>
@@ -713,7 +705,18 @@
           </tr>
       </tbody>
     </table>
-        <p>Example:</p>
+        <p>Options:</p>
+<ul>
+<li><code>backgroundColor</code> (str): Background color (default <code>'white'</code>).</li>
+<li><code>dataColors</code> (list[str]): Slice colors.</li>
+<li><code>fontFamily</code> (str): Font family (default <code>'xkcd'</code>).</li>
+<li><code>innerRadius</code> (float): 0 for pie, 0.5 for donut (default 0.5).</li>
+<li><code>legendPosition</code> (int): Legend placement (use <code>positionType</code>).</li>
+<li><code>showLegend</code> (bool): Show legend (default True).</li>
+<li><code>strokeColor</code> (str): Border color (default <code>'black'</code>).</li>
+<li><code>unxkcdify</code> (bool): Disable hand-drawn style (default False).</li>
+</ul>
+<p>Example:</p>
 <div class="highlight"><pre><span></span><code>Pie(
     title=&quot;Browser Share&quot;,
     labels=[&quot;Chrome&quot;, &quot;Firefox&quot;, &quot;Safari&quot;],
@@ -773,7 +776,10 @@
 <span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Pie</span><span class="p">(</span><span class="n">_BaseChart</span><span class="p">):</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Pie</span><span class="p">(</span><span class="n">_BaseChart</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pie/donut chart.</span>
 
 <span class="sd">    Uses a single dataset. Only `datasets[0]` is rendered.</span>
@@ -783,15 +789,18 @@
 <span class="sd">        labels: Slice labels.</span>
 <span class="sd">        datasets: List containing one dataset dict with a `data` key</span>
 <span class="sd">            (list of numeric values).</span>
-<span class="sd">        options: Dict of chart options:</span>
-<span class="sd">            - `innerRadius` (float): 0 for pie, 0.5 for donut (default 0.5).</span>
-<span class="sd">            - `legendPosition` (int): Legend placement (use `positionType`).</span>
-<span class="sd">            - `showLegend` (bool): Show legend (default True).</span>
-<span class="sd">            - `dataColors` (list[str]): Slice colors.</span>
-<span class="sd">            - `fontFamily` (str): Font family (default `&#39;xkcd&#39;`).</span>
-<span class="sd">            - `strokeColor` (str): Border color (default `&#39;black&#39;`).</span>
-<span class="sd">            - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
-<span class="sd">            - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
+<span class="sd">        options: Dict of chart options.</span>
+
+<span class="sd">    Options:</span>
+
+<span class="sd">    - `backgroundColor` (str): Background color (default `&#39;white&#39;`).</span>
+<span class="sd">    - `dataColors` (list[str]): Slice colors.</span>
+<span class="sd">    - `fontFamily` (str): Font family (default `&#39;xkcd&#39;`).</span>
+<span class="sd">    - `innerRadius` (float): 0 for pie, 0.5 for donut (default 0.5).</span>
+<span class="sd">    - `legendPosition` (int): Legend placement (use `positionType`).</span>
+<span class="sd">    - `showLegend` (bool): Show legend (default True).</span>
+<span class="sd">    - `strokeColor` (str): Border color (default `&#39;black&#39;`).</span>
+<span class="sd">    - `unxkcdify` (bool): Disable hand-drawn style (default False).</span>
 
 <span class="sd">    Example:</span>
 

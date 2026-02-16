@@ -6,6 +6,8 @@ app = marimo.App()
 
 @app.cell
 def _():
+    import csv
+
     from chart_xkcd import (
         Bar,
         Line,
@@ -17,35 +19,44 @@ def _():
         to_widget,
     )
 
-    return Bar, Line, Pie, Radar, Scatter, StackedBar, positionType, to_widget
+    return Bar, Line, Pie, Radar, Scatter, StackedBar, csv, positionType, to_widget
 
 
 @app.cell
-def _(Bar, to_widget):
+def _(Bar, csv, to_widget):
+    with open("tmp/bar.csv") as _f:
+        _rows = list(csv.DictReader(_f))
+
     to_widget(
         Bar(
-            title="Github Stars vs Patron Count",
-            x_label="Project",
+            title="Samples per Person",
+            x_label="Person",
             y_label="Count",
-            labels=["chart.xkcd", "star-history", "tomato-pie"],
-            datasets=[{"data": [2100, 430, 90]}],
+            labels=[r["name"] for r in _rows],
+            datasets=[{"data": [int(r["num"]) for r in _rows]}],
         )
     )
     return
 
 
 @app.cell
-def _(StackedBar, to_widget):
+def _(StackedBar, csv, to_widget):
+    with open("tmp/stacked_bar.csv") as _f:
+        _rows = list(csv.DictReader(_f))
+
+    _grids = sorted(set(r["grid"] for r in _rows))
+    _varieties = sorted(set(r["variety"] for r in _rows))
+    _lookup = {(r["variety"], r["grid"]): int(r["num"]) for r in _rows}
+
     to_widget(
         StackedBar(
-            title="Issues and PRs",
-            x_label="Month",
+            title="Samples by Variety and Grid",
+            x_label="Grid",
             y_label="Count",
-            labels=["Jan", "Feb", "Mar", "Apr", "May"],
+            labels=_grids,
             datasets=[
-                {"label": "Issues", "data": [12, 19, 11, 29, 17]},
-                {"label": "PRs", "data": [3, 5, 2, 4, 1]},
-                {"label": "Merges", "data": [2, 3, 0, 1, 1]},
+                {"label": v, "data": [_lookup[(v, g)] for g in _grids]}
+                for v in _varieties
             ],
             options={"showLegend": True},
         )
@@ -54,60 +65,48 @@ def _(StackedBar, to_widget):
 
 
 @app.cell
-def _(Line, to_widget):
+def _(Line, csv, to_widget):
+    with open("tmp/line.csv") as _f:
+        _rows = list(csv.DictReader(_f))
+
     to_widget(
         Line(
-            title="Monthly Income of an Indie Developer",
-            x_label="Month",
-            y_label="$ Dollars",
-            labels=["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-            datasets=[
-                {
-                    "label": "Plan",
-                    "data": [30, 70, 200, 300, 500, 800, 1500, 2900, 5000, 8000],
-                },
-                {
-                    "label": "Reality",
-                    "data": [0, 1, 30, 70, 80, 100, 50, 80, 40, 150],
-                },
-            ],
+            title="Samples Collected per Week",
+            x_label="Week",
+            y_label="Count",
+            labels=[r["week"] for r in _rows],
+            datasets=[{"label": "Samples", "data": [int(r["num"]) for r in _rows]}],
         )
     )
     return
 
 
 @app.cell
-def _(Scatter, positionType, to_widget):
+def _(Scatter, csv, positionType, to_widget):
+    with open("tmp/scatter.csv") as _f:
+        _rows = list(csv.DictReader(_f))
+
+    _varieties = sorted(set(r["variety"] for r in _rows))
+
     to_widget(
         Scatter(
-            title="Pokemon Comparison",
-            x_label="Attack",
-            y_label="Defense",
+            title="Snail Mass vs Diameter",
+            x_label="Mass (g)",
+            y_label="Diameter (mm)",
             datasets=[
                 {
-                    "label": "February",
+                    "label": v,
                     "data": [
-                        {"x": 50, "y": 60},
-                        {"x": 70, "y": 80},
-                        {"x": 90, "y": 50},
-                        {"x": 40, "y": 70},
+                        {"x": float(r["mass"]), "y": float(r["diameter"])}
+                        for r in _rows
+                        if r["variety"] == v
                     ],
-                },
-                {
-                    "label": "March",
-                    "data": [
-                        {"x": 60, "y": 55},
-                        {"x": 80, "y": 90},
-                        {"x": 30, "y": 40},
-                        {"x": 100, "y": 65},
-                    ],
-                },
+                }
+                for v in _varieties
             ],
             options={
-                "xTickCount": 5,
-                "yTickCount": 5,
                 "showLine": False,
-                "legendPosition": positionType.upRight,
+                "legendPosition": positionType.upLeft,
             },
         )
     )
@@ -115,12 +114,15 @@ def _(Scatter, positionType, to_widget):
 
 
 @app.cell
-def _(Pie, positionType, to_widget):
+def _(Pie, csv, positionType, to_widget):
+    with open("tmp/pie.csv") as _f:
+        _rows = list(csv.DictReader(_f))
+
     to_widget(
         Pie(
-            title="What Tim Is Made Of",
-            labels=["Code", "Coffee", "Sleep", "Snacks"],
-            datasets=[{"data": [500, 200, 80, 90]}],
+            title="Samples by Variety",
+            labels=[r["variety"] for r in _rows],
+            datasets=[{"data": [int(r["num"]) for r in _rows]}],
             options={
                 "innerRadius": 0.5,
                 "legendPosition": positionType.upRight,
@@ -131,14 +133,21 @@ def _(Pie, positionType, to_widget):
 
 
 @app.cell
-def _(Radar, positionType, to_widget):
+def _(Radar, csv, positionType, to_widget):
+    with open("tmp/radar.csv") as _f:
+        _rows = list(csv.DictReader(_f))
+
+    _grids = sorted(set(r["grid"] for r in _rows))
+    _varieties = sorted(set(r["variety"] for r in _rows))
+    _lookup = {(r["variety"], r["grid"]): int(r["num"]) for r in _rows}
+
     to_widget(
         Radar(
-            title="Developer Skills",
-            labels=["JavaScript", "Python", "Go", "Rust", "SQL"],
+            title="Samples by Variety and Grid",
+            labels=_grids,
             datasets=[
-                {"label": "Developer A", "data": [8, 9, 5, 3, 7]},
-                {"label": "Developer B", "data": [6, 7, 8, 6, 5]},
+                {"label": v, "data": [_lookup[(v, g)] for g in _grids]}
+                for v in _varieties
             ],
             options={
                 "showLabels": True,

@@ -1,38 +1,37 @@
-"""Example: XY scatter chart."""
+"""Example: Scatter chart."""
 
+import csv
 import sys
 from chart_xkcd import Scatter, positionType, render
 
+if len(sys.argv) != 3:
+    print(f"usage: {sys.argv[0]} /path/to/data.csv /path/to/chart.html")
+    sys.exit(1)
+
+with open(sys.argv[1]) as reader:
+    rows = list(csv.DictReader(reader))
+
+varieties = sorted(set(r["variety"] for r in rows))
+
 chart = Scatter(
-    title="Pokemon Comparison",
-    x_label="Attack",
-    y_label="Defense",
+    title="Snail Mass vs Diameter",
+    x_label="Mass (g)",
+    y_label="Diameter (mm)",
     datasets=[
         {
-            "label": "February",
+            "label": v,
             "data": [
-                {"x": 50, "y": 60},
-                {"x": 70, "y": 80},
-                {"x": 90, "y": 50},
-                {"x": 40, "y": 70},
+                {"x": float(r["mass"]), "y": float(r["diameter"])}
+                for r in rows
+                if r["variety"] == v
             ],
-        },
-        {
-            "label": "March",
-            "data": [
-                {"x": 60, "y": 55},
-                {"x": 80, "y": 90},
-                {"x": 30, "y": 40},
-                {"x": 100, "y": 65},
-            ],
-        },
+        }
+        for v in varieties
     ],
     options={
-        "xTickCount": 5,
-        "yTickCount": 5,
         "showLine": False,
-        "legendPosition": positionType.upRight,
+        "legendPosition": positionType.upLeft,
     },
 )
 
-render(chart, sys.argv[1], chart_js_url="/src/chart_xkcd/static/chart.xkcd.js")
+render(chart, sys.argv[2], chart_js_url="/src/chart_xkcd/static/chart.xkcd.js")

@@ -78,9 +78,10 @@ mkdir -p tmp &&
 for file in examples/*.py
 do
     name=$(basename "$file" .py)
-    python "$file" "tmp/$name.html"
+    python "$file" "tmp/$name.csv" "tmp/$name.html"
 done
 """}
 fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}
 format = {help = "format Python code", cmd = "ruff format ."}
 publish = {help = "publish using ~/.pypirc credentials", cmd = "twine upload --verbose dist/*"}
+serve = {help = "run local server", cmd = "python -m http.server"}

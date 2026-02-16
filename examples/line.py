@@ -1,23 +1,22 @@
 """Example: Line chart."""
 
+import csv
 import sys
 from chart_xkcd import Line, render
 
+if len(sys.argv) != 3:
+    print(f"usage: {sys.argv[0]} /path/to/data.csv /path/to/chart.html")
+    sys.exit(1)
+
+with open(sys.argv[1]) as reader:
+    rows = list(csv.DictReader(reader))
+
 chart = Line(
-    title="Monthly Income of an Indie Developer",
-    x_label="Month",
-    y_label="$ Dollars",
-    labels=["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-    datasets=[
-        {
-            "label": "Plan",
-            "data": [30, 70, 200, 300, 500, 800, 1500, 2900, 5000, 8000],
-        },
-        {
-            "label": "Reality",
-            "data": [0, 1, 30, 70, 80, 100, 50, 80, 40, 150],
-        },
-    ],
+    title="Samples Collected per Week",
+    x_label="Week",
+    y_label="Count",
+    labels=[r["week"] for r in rows],
+    datasets=[{"label": "Samples", "data": [int(r["num"]) for r in rows]}],
 )
 
-render(chart, sys.argv[1], chart_js_url="/src/chart_xkcd/static/chart.xkcd.js")
+render(chart, sys.argv[2], chart_js_url="/src/chart_xkcd/static/chart.xkcd.js")

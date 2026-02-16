@@ -1,5 +1,12 @@
 """chart_xkcd: Python API for generating xkcd-style charts."""
 
+from importlib.metadata import PackageNotFoundError, version
+
+try:
+    __version__ = version("chart-xkcd")
+except PackageNotFoundError:
+    __version__ = "unknown"
+
 from .bar import Bar as Bar
 from .line import Line as Line
 from .pie import Pie as Pie

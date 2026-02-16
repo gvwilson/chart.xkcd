@@ -1,6 +1,6 @@
 [project]
 name = "chart-xkcd"
-version = "0.3.0"
+version = "0.3.1"
 description = "Python API for generating XKCD-style charts"
 license = "MIT"
 requires-python = ">=3.13"

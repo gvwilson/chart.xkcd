@@ -7,5 +7,5 @@ import StackedBar from './StackedBar';
 import config from './config';
 
 module.exports = {
-    config, Bar, Line, Pie, Radar, Scatter, StackedBar
+  config, Bar, Line, Pie, Radar, Scatter, StackedBar
 };

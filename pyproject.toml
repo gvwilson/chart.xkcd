@@ -51,7 +51,7 @@ npm run lint
 """}
 clean = {help = "clean up", cmd = """
 rm -rf ./dist &&
-rm -rf ./src/static &&
+rm -f ./src/static/*.js &&
 rm -rf ./data &&
 rm -rf ./tmp &&
 find . -path './.venv' -prune -o -type d -name '.ruff_cache' -exec rm -rf {} + &&

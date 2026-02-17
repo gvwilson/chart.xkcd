@@ -4,6 +4,9 @@ import Pie from './Pie';
 import Radar from './Radar';
 import Scatter from './Scatter';
 import StackedBar from './StackedBar';
+import { setFontUrl } from './utils/addFont';
+
+setFontUrl(new URL('./xkcd-script.ttf', import.meta.url).href);
 
 export { Bar, Line, Pie, Radar, Scatter, StackedBar };
 

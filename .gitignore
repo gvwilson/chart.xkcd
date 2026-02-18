@@ -22,4 +22,5 @@ examples/*.html
 *~
 .DS_Store
 data/
-tmp/
+tmp/*.csv
+tmp/*.html

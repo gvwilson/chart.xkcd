@@ -1,242 +1,126 @@
 import chartXkcd from '../src';
+import { loadFont } from '../src/utils/addFont';
 
-const svg = document.querySelector('.bar-chart');
+function parseCSV(text) {
+  const lines = text.trim().replace(/\r/g, '').split('\n');
+  const headers = lines[0].split(',');
+  return lines.slice(1).map(line => {
+    const values = line.split(',');
+    const row = {};
+    headers.forEach((h, i) => row[h] = values[i]);
+    return row;
+  });
+}
 
-new chartXkcd.Bar(svg, {
-  title: 'Github stars VS patron number',
-  xLabel: 'Month',
-  yLabel: 'Count',
-  data: {
-    labels: ['github stars', 'patrons'],
-    datasets: [{
-      data: [100, 2],
-    }],
-  },
-  // options: {
-  //   yTickCount: 2,
-  //   // unxkcdify: true,
-  //   // strokeColor: 'white',
-  //   // backgroundColor: 'black',
-  // },
-});
+async function fetchCSV(path) {
+  const resp = await fetch(path);
+  return parseCSV(await resp.text());
+}
 
-const svgStackedBar = document.querySelector('.stacked-bar-chart');
-new chartXkcd.StackedBar(svgStackedBar, {
-  title: 'Issues and PR Submissions',
-  xLabel: 'Month',
-  yLabel: 'Count',
-  data: {
-    labels: ['Jan', 'Feb', 'Mar', 'April', 'May'],
-    datasets: [{
-      label: 'Issues',
-      data: [12, 19, 11, 29, 17],
-    }, {
-      label: 'PRs',
-      data: [3, 5, 2, 4, 1],
-    }, {
-      label: 'Merges',
-      data: [2, 3, 0, 1, 1],
-    }],
-  },
-  // options: {
-  // showLegend: true,
-  //   yTickCount: 2,
-  //   // unxkcdify: true,
-  //   // strokeColor: 'white',
-  //   // backgroundColor: 'black',
-  // },
-});
+async function main() {
+  await loadFont();
 
-const svgPie = document.querySelector('.pie-chart');
-new chartXkcd.Pie(svgPie, {
-  title: 'What Tim is made of',
-  data: {
-    labels: ['a', 'b', 'e', 'f', 'g'],
-    datasets: [{
-      data: [500, 200, 80, 90, 100],
-    }],
-  },
-  options: {
-    innerRadius: 0.6,
-    legendPosition: chartXkcd.config.positionType.upRight,
-    // showLegend: true,
-    // unxkcdify: true,
-    // strokeColor: 'white',
-    // backgroundColor: 'black',
-  },
-});
+  // Bar
+  const barRows = await fetchCSV('./tmp/bar.csv');
+  new chartXkcd.Bar(document.querySelector('.bar-chart'), {
+    title: 'Samples per Person',
+    xLabel: 'Person',
+    yLabel: 'Count',
+    data: {
+      labels: barRows.map(r => r.name),
+      datasets: [{ data: barRows.map(r => parseInt(r.num)) }],
+    },
+  });
 
-const svgLine = document.querySelector('.line-chart');
-new chartXkcd.Line(svgLine, {
-  title: 'Monthly income of an indie developer',
-  xLabel: 'Month',
-  yLabel: '$ Dollars',
-  data: {
-    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-    datasets: [{
-      label: 'Plan',
-      data: [30, 70, 200, 300, 500, 800, 1500, 2900, 5000, 8000],
-      color: '#dd4528',
-    }, {
-      label: 'Reality',
-      data: [0, 1, 30, 70, 80, 100, 50, 80, 40, 150],
-      color: '#28a3dd',
-    }],
-  },
-  options: {
-    // unxkcdify: true,
-    // strokeColor: 'black',
-    // backgroundColor: 'white',
-  },
-});
+  // Stacked Bar
+  const stackedRows = await fetchCSV('./tmp/stacked_bar.csv');
+  const grids = [...new Set(stackedRows.map(r => r.grid))].sort();
+  const stackedVarieties = [...new Set(stackedRows.map(r => r.variety))].sort();
+  const stackedLookup = {};
+  stackedRows.forEach(r => stackedLookup[r.variety + ',' + r.grid] = parseInt(r.num));
+  new chartXkcd.StackedBar(document.querySelector('.stacked-bar-chart'), {
+    title: 'Samples by Variety and Grid',
+    xLabel: 'Grid',
+    yLabel: 'Count',
+    data: {
+      labels: grids,
+      datasets: stackedVarieties.map(v => ({
+        label: v,
+        data: grids.map(g => stackedLookup[v + ',' + g]),
+      })),
+    },
+    options: { showLegend: true },
+  });
 
-const svgXY = document.querySelector('.xyline-chart');
-new chartXkcd.XY(svgXY, {
-  title: 'stars',
-  xLabel: 'wo',
-  yLabel: 'Stars count',
-  data: {
-    datasets: [{
-      label: 'timqian',
-      data: [{ x: 3, y: 10 }, { x: 4, y: 122 }, { x: 10, y: 180 }, { x: 1, y: 2 }, { x: 2, y: 4 }],
-    }, {
-      label: 'wewean',
-      data: [{ x: 3, y: 122 }, { x: 4, y: 212 }, { x: -3, y: 100 }, { x: 1, y: 1 }, { x: 1.5, y: 12 }],
-    }],
-  },
-  options: {
-    xTickCount: 5,
-    yTickCount: 5,
-    legendPosition: chartXkcd.config.positionType.downRight,
-    showLine: false,
-    // showLegend: true,
-    // unxkcdify: true,
-    // strokeColor: 'blue',
-    // backgroundColor: 'black',
+  // Line
+  const lineRows = await fetchCSV('./tmp/line.csv');
+  new chartXkcd.Line(document.querySelector('.line-chart'), {
+    title: 'Samples Collected per Week',
+    xLabel: 'Week',
+    yLabel: 'Count',
+    data: {
+      labels: lineRows.map(r => r.week),
+      datasets: [{ label: 'Samples', data: lineRows.map(r => parseInt(r.num)) }],
+    },
+  });
 
-  },
-});
+  // Scatter
+  const scatterRows = await fetchCSV('./tmp/scatter.csv');
+  const scatterVarieties = [...new Set(scatterRows.map(r => r.variety))].sort();
+  new chartXkcd.Scatter(document.querySelector('.scatter-chart'), {
+    title: 'Snail Mass vs Diameter',
+    xLabel: 'Mass (g)',
+    yLabel: 'Diameter (mm)',
+    data: {
+      datasets: scatterVarieties.map(v => ({
+        label: v,
+        data: scatterRows
+          .filter(r => r.variety === v)
+          .map(r => ({ x: parseFloat(r.mass), y: parseFloat(r.diameter) })),
+      })),
+    },
+    options: {
+      showLine: false,
+      legendPosition: chartXkcd.config.positionType.upLeft,
+    },
+  });
 
-const svgXY2 = document.querySelector('.xyline-chart2');
-new chartXkcd.XY(svgXY2, {
-  title: 'Github star history',
-  xLabel: 'Month',
-  yLabel: 'Stars abc',
-  data: {
-    datasets: [{
-      label: 'timqian/chart.xkcd',
-      data: [{ x: '2015-03-01', y: 0 }, { x: '2015-04-01', y: 2 }, { x: '2015-05-01', y: 4 }, { x: '2015-06-01', y: 10 }, { x: '2015-07-01', y: 122 }],
-    }, {
-      label: 'timqian/star-history',
-      data: [{ x: '2015-01-01', y: 0 }, { x: '2015-03-01', y: 1 }, { x: '2015-04-01', y: 12 }, { x: '2015-05-01', y: 122 }, { x: '2015-06-01', y: 212 }],
-    }],
-  },
-  options: {
-    xTickCount: 3,
-    yTickCount: 4,
-    legendPosition: chartXkcd.config.positionType.upLeft,
-    showLine: true,
-    timeFormat: 'MM/DD/YYYY',
-    dotSize: 0.5,
-    // unxkcdify: true,
-    // strokeColor: 'white',
-    // backgroundColor: 'black',
-  },
-});
+  // Pie
+  const pieRows = await fetchCSV('./tmp/pie.csv');
+  new chartXkcd.Pie(document.querySelector('.pie-chart'), {
+    title: 'Samples by Variety',
+    data: {
+      labels: pieRows.map(r => r.variety),
+      datasets: [{ data: pieRows.map(r => parseInt(r.num)) }],
+    },
+    options: {
+      innerRadius: 0.5,
+      legendPosition: chartXkcd.config.positionType.upRight,
+    },
+  });
 
-const svgRadar = document.querySelector('.radar-chart');
-new chartXkcd.Radar(svgRadar, {
-  title: 'Radar',
-  data: {
-    labels: ['c', 'h', 'a', 'r', 't'],
-    datasets: [{
-      label: 'ccharrrt',
-      data: [2, 1, 1, 3, 1],
-    }, {
-      label: 'chhaart',
-      data: [1, 2, 2, 1, 1],
-    }],
-  },
-  options: {
-    showLegend: true,
-    dotSize: 0.8,
-    showLabels: true,
-    legendPosition: chartXkcd.config.positionType.upRight,
-    // unxkcdify: true,
-    // strokeColor: 'white',
-    // backgroundColor: 'black',
-  },
-});
+  // Radar
+  const radarRows = await fetchCSV('./tmp/radar.csv');
+  const radarGrids = [...new Set(radarRows.map(r => r.grid))].sort();
+  const radarVarieties = [...new Set(radarRows.map(r => r.variety))].sort();
+  const radarLookup = {};
+  radarRows.forEach(r => radarLookup[r.variety + ',' + r.grid] = parseInt(r.num));
+  new chartXkcd.Radar(document.querySelector('.radar-chart'), {
+    title: 'Samples by Variety and Grid',
+    data: {
+      labels: radarGrids,
+      datasets: radarVarieties.map(v => ({
+        label: v,
+        data: radarGrids.map(g => radarLookup[v + ',' + g]),
+      })),
+    },
+    options: {
+      showLabels: true,
+      showLegend: true,
+      dotSize: 0.8,
+      legendPosition: chartXkcd.config.positionType.upRight,
+    },
+  });
+}
 
-const svgLineCus = document.querySelector('.line-chart-cus');
-new chartXkcd.Line(svgLineCus, {
-  title: 'Customize Font & colors (定制外观)',
-  xLabel: 'this is x label',
-  yLabel: 'y label',
-  data: {
-    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-    datasets: [{
-      label: 'font',
-      data: [30, 70, 200, 300, 500, 800, 100, 290, 500, 300],
-    }, {
-      label: 'color',
-      data: [0, 1, 30, 70, 80, 100, 500, 80, 40, 250],
-    }],
-  },
-  options: {
-    fontFamily: 'ZCOOL KuaiLe',
-    dataColors: ['black', '#aaa'],
-    legendPosition: chartXkcd.config.positionType.upRight,
-    // strokeColor: 'white',
-    // backgroundColor: 'black',
-  },
-});
-
-
-const svgLineUnxkcdify = document.querySelector('.line-chart-unxkcdify');
-new chartXkcd.Line(svgLineUnxkcdify, {
-  title: 'Unxkcdify',
-  xLabel: 'this is x label',
-  yLabel: 'y label',
-  data: {
-    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-    datasets: [{
-      label: 'font',
-      data: [30, 70, 200, 300, 500, 800, 100, 290, 500, 300],
-    }, {
-      label: 'color',
-      data: [0, 1, 30, 70, 80, 100, 500, 80, 40, 250],
-    }],
-  },
-  options: {
-    unxkcdify: true,
-    // strokeColor: 'white',
-    // backgroundColor: 'black',
-  },
-});
-
-const svgDark = document.querySelector('.line-chart-dark');
-new chartXkcd.XY(svgDark, {
-  title: 'stars',
-  xLabel: 'wo',
-  yLabel: 'Stars count',
-  data: {
-    datasets: [{
-      label: 'timqian',
-      data: [{ x: 3, y: 10 }, { x: 4, y: 122 }, { x: 10, y: 180 }, { x: 1, y: 2 }, { x: 2, y: 4 }],
-    }, {
-      label: 'wewean',
-      data: [{ x: 3, y: 122 }, { x: 4, y: 212 }, { x: -3, y: 100 }, { x: 1, y: 1 }, { x: 1.5, y: 12 }],
-    }],
-  },
-  options: {
-    xTickCount: 5,
-    yTickCount: 5,
-    legendPosition: chartXkcd.config.positionType.downRight,
-    showLine: false,
-    // unxkcdify: true,
-    strokeColor: 'white',
-    backgroundColor: 'black',
-
-  },
-});
+main();

@@ -42,7 +42,13 @@ dev = [
 ]
 
 [tool.taskipy.tasks]
-build = {help = "build package", cmd = "cd js && npm run build && cd - && python -m build"}
+build = {help = "build package", cmd = """
+python bin/font_encode.py assets/xkcd-script.ttf js/src/utils/fontData.js &&
+cd js &&
+npm run build &&
+cd - &&
+python -m build
+"""}
 lint = {help = "check code issues", cmd = """
 ruff check . &&
 ty check . &&

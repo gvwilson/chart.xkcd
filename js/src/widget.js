@@ -4,16 +4,15 @@ import Pie from './Pie';
 import Radar from './Radar';
 import Scatter from './Scatter';
 import StackedBar from './StackedBar';
-import { setFontUrl } from './utils/addFont';
-
-setFontUrl(new URL('./xkcd-script.ttf', import.meta.url).href);
+import { loadFont } from './utils/addFont';
 
 export { Bar, Line, Pie, Radar, Scatter, StackedBar };
 
 const chartTypes = { Bar, Line, Pie, Radar, Scatter, StackedBar };
 
-function render({ model, el }) {
+async function render({ model, el }) {
   el.innerHTML = "";
+  await loadFont();
 
   var width = model.get("width");
   var height = model.get("height");

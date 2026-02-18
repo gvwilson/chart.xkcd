@@ -1,16 +1,21 @@
-let fontUrl = null;
+import fontDataUrl from './fontData';
 
-export function setFontUrl(url) {
-  fontUrl = url;
+let fontLoaded = false;
+
+export async function loadFont() {
+  if (fontLoaded) return;
+  const font = new FontFace('xkcd', `url("${fontDataUrl}")`);
+  const loaded = await font.load();
+  document.fonts.add(loaded);
+  fontLoaded = true;
 }
 
 export default function addFont(parent) {
-  if (!fontUrl) return;
   parent.append('defs')
     .append('style')
     .attr('type', 'text/css')
     .text(`@font-face {
       font-family: "xkcd";
-      src: url("${fontUrl}") format("truetype");
+      src: url("${fontDataUrl}") format("truetype");
     }`);
 }

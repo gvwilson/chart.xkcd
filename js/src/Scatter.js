@@ -1,5 +1,5 @@
 import { line, curveMonotoneX } from 'd3-shape';
-import { select } from 'd3-selection';
+import { select, event as d3Event } from 'd3-selection';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import dayjs from 'dayjs';
 
@@ -190,6 +190,18 @@ class Scatter {
       .attr('cx', (d) => xScale(d.x))
       .attr('cy', (d) => yScale(d.y))
       .attr('pointer-events', 'all')
+      .on('click', (d, i, nodes) => {
+        if (this.options.onSelect) {
+          const xyGroupIndex = Number(select(nodes[i].parentElement).attr('xy-group-index'));
+          this.options.onSelect({
+            dataset_index: xyGroupIndex,
+            point_index: i,
+            label: this.data.datasets[xyGroupIndex].label,
+            x: d.x,
+            y: d.y,
+          }, d3Event.shiftKey);
+        }
+      })
       .on('mouseover', (d, i, nodes) => {
         const xyGroupIndex = Number(select(nodes[i].parentElement).attr('xy-group-index'));
         select(nodes[i])
@@ -225,6 +237,96 @@ class Scatter {
 
         tooltip.hide();
       });
+
+    // Box selection
+    if (this.options.onSelect) {
+      let dragStart = null;
+      const selRect = graphPart.append('rect')
+        .attr('class', 'xkcd-chart-select-rect')
+        .attr('fill', 'rgba(0,0,0,0.1)')
+        .attr('stroke', this.options.strokeColor)
+        .attr('stroke-width', 1)
+        .attr('stroke-dasharray', '4,4')
+        .style('visibility', 'hidden');
+
+      // Invisible overlay behind dots to capture drag events on empty space
+      graphPart.insert('rect', ':first-child')
+        .attr('class', 'xkcd-chart-drag-overlay')
+        .attr('width', this.width)
+        .attr('height', this.height)
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all')
+        .on('mousedown', () => {
+          const e = d3Event;
+          if (e.button !== 0) return;
+          const svgNode = this.svgEl.node();
+          const pt = svgNode.createSVGPoint();
+          pt.x = e.clientX;
+          pt.y = e.clientY;
+          const local = pt.matrixTransform(graphPart.node().getScreenCTM().inverse());
+          dragStart = { x: local.x, y: local.y };
+          selRect.style('visibility', 'hidden');
+        });
+
+      select(window)
+        .on('mousemove.scatter-box', () => {
+          if (!dragStart) return;
+          const e = d3Event;
+          const svgNode = this.svgEl.node();
+          const pt = svgNode.createSVGPoint();
+          pt.x = e.clientX;
+          pt.y = e.clientY;
+          const local = pt.matrixTransform(graphPart.node().getScreenCTM().inverse());
+          const x = Math.max(0, Math.min(dragStart.x, local.x));
+          const y = Math.max(0, Math.min(dragStart.y, local.y));
+          const w = Math.min(Math.abs(local.x - dragStart.x), this.width - x);
+          const h = Math.min(Math.abs(local.y - dragStart.y), this.height - y);
+          selRect
+            .attr('x', x).attr('y', y)
+            .attr('width', w).attr('height', h)
+            .style('visibility', 'visible');
+        })
+        .on('mouseup.scatter-box', () => {
+          if (!dragStart) return;
+          const e = d3Event;
+          const svgNode = this.svgEl.node();
+          const pt = svgNode.createSVGPoint();
+          pt.x = e.clientX;
+          pt.y = e.clientY;
+          const local = pt.matrixTransform(graphPart.node().getScreenCTM().inverse());
+          const x0 = Math.min(dragStart.x, local.x);
+          const x1 = Math.max(dragStart.x, local.x);
+          const y0 = Math.min(dragStart.y, local.y);
+          const y1 = Math.max(dragStart.y, local.y);
+          dragStart = null;
+          selRect.style('visibility', 'hidden');
+
+          // Only treat as box select if dragged more than 4px
+          if (x1 - x0 < 4 && y1 - y0 < 4) return;
+
+          const dataX0 = xScale.invert(x0);
+          const dataX1 = xScale.invert(x1);
+          const dataY0 = yScale.invert(y1); // y is inverted
+          const dataY1 = yScale.invert(y0);
+          const selected = [];
+          this.data.datasets.forEach((dataset, dsIdx) => {
+            dataset.data.forEach((d, ptIdx) => {
+              if (d.x >= dataX0 && d.x <= dataX1 && d.y >= dataY0 && d.y <= dataY1) {
+                selected.push({
+                  dataset_index: dsIdx,
+                  point_index: ptIdx,
+                  label: dataset.label,
+                  x: d.x,
+                  y: d.y,
+                });
+              }
+            });
+          });
+          if (selected.length > 0) {
+            this.options.onSelect(selected, e.shiftKey);
+          }
+        });
+    }
 
     // Legend
     if (this.options.showLegend) {

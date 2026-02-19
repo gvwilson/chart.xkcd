@@ -1,4 +1,4 @@
-import { select, mouse } from 'd3-selection';
+import { select, mouse, event as d3Event } from 'd3-selection';
 import { scaleBand, scaleLinear } from 'd3-scale';
 
 import addAxis from './utils/addAxis';
@@ -140,6 +140,11 @@ class Bar {
       .on('mouseout', (d, i, nodes) => {
         select(nodes[i]).attr('fill', 'none');
         tooltip.hide();
+      })
+      .on('click', (d, i) => {
+        if (this.options.onSelect) {
+          this.options.onSelect({ index: i, label: this.data.labels[i], value: d }, d3Event.shiftKey);
+        }
       })
       .on('mousemove', (d, i, nodes) => {
         const tipX = mouse(nodes[i])[0] + margin.left + 10;

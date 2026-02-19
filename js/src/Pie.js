@@ -1,4 +1,4 @@
-import { select, mouse } from 'd3-selection';
+import { select, mouse, event as d3Event } from 'd3-selection';
 import { pie, arc } from 'd3-shape';
 import Tooltip from './components/Tooltip';
 import addLegend from './utils/addLegend';
@@ -103,6 +103,11 @@ class Pie {
       .on('mouseout', (d, i, nodes) => {
         select(nodes[i]).attr('fill-opacity', 1);
         tooltip.hide();
+      })
+      .on('click', (d, i) => {
+        if (this.options.onSelect) {
+          this.options.onSelect({ index: i, label: this.data.labels[i], value: d.data }, d3Event.shiftKey);
+        }
       })
       .on('mousemove', (d, i, nodes) => {
         const tipX = mouse(nodes[i])[0] + (this.width / 2) + 10;

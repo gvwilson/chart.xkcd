@@ -17,6 +17,7 @@ class ChartWidget(anywidget.AnyWidget):
     chart_type = traitlets.Unicode("Bar").tag(sync=True)
     width = traitlets.Int(600).tag(sync=True)
     height = traitlets.Int(400).tag(sync=True)
+    selection = traitlets.Unicode("[]").tag(sync=True)
 
 
 def to_widget(chart, width=600, height=400):

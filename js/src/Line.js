@@ -1,5 +1,5 @@
 import { line, curveMonotoneX } from 'd3-shape';
-import { select, mouse } from 'd3-selection';
+import { select, mouse, event as d3Event } from 'd3-selection';
 import { scalePoint, scaleLinear } from 'd3-scale';
 
 import addAxis from './utils/addAxis';
@@ -170,6 +170,23 @@ class Line {
         circles.forEach((circle) => circle.style('visibility', 'hidden'));
         verticalLine.style('visibility', 'hidden');
         tooltip.hide();
+      })
+      .on('click', (d, i, nodes) => {
+        if (this.options.onSelect) {
+          const labelXs = this.data.labels.map((label) => xScale(label) + margin.left);
+          const mouseLabelDistances = labelXs.map(
+            (labelX) => Math.abs(labelX - mouse(nodes[i])[0] - margin.left),
+          );
+          const nearestIndex = mouseLabelDistances.indexOf(Math.min(...mouseLabelDistances));
+          this.options.onSelect({
+            index: nearestIndex,
+            label: this.data.labels[nearestIndex],
+            values: this.data.datasets.map((dataset) => ({
+              label: dataset.label,
+              value: dataset.data[nearestIndex],
+            })),
+          }, d3Event.shiftKey);
+        }
       })
       .on('mousemove', (d, i, nodes) => {
         const tipX = mouse(nodes[i])[0] + margin.left + 10;

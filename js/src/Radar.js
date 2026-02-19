@@ -1,4 +1,4 @@
-import { select } from 'd3-selection';
+import { select, event as d3Event } from 'd3-selection';
 import { line, curveLinearClosed } from 'd3-shape';
 import { scaleLinear } from 'd3-scale';
 import addLegend from './utils/addLegend';
@@ -185,6 +185,18 @@ class Radar {
       .attr('cx', getX)
       .attr('cy', getY)
       .attr('pointer-events', 'all')
+      .on('click', (d, i) => {
+        if (this.options.onSelect) {
+          this.options.onSelect({
+            index: i,
+            label: this.data.labels[i],
+            values: this.data.datasets.map((dataset) => ({
+              label: dataset.label,
+              value: dataset.data[i],
+            })),
+          }, d3Event.shiftKey);
+        }
+      })
       .on('mouseover', (d, i, nodes) => {
         select(nodes[i]).attr('r', dotHoverSize);
 

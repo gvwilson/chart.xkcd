@@ -28,6 +28,26 @@ async function render({ model, el }) {
 
   var chartType = model.get("chart_type");
   var config = JSON.parse(model.get("config"));
+  config.options = config.options || {};
+  config.options.onSelect = (payload, shiftKey) => {
+    var items = Array.isArray(payload) ? payload : [payload];
+    if (!shiftKey) {
+      model.set("selection", JSON.stringify(items));
+    } else {
+      var current = JSON.parse(model.get("selection") || "[]");
+      items.forEach((item) => {
+        var key = JSON.stringify(item);
+        var idx = current.findIndex((existing) => JSON.stringify(existing) === key);
+        if (idx >= 0) {
+          current.splice(idx, 1);
+        } else {
+          current.push(item);
+        }
+      });
+      model.set("selection", JSON.stringify(current));
+    }
+    model.save_changes();
+  };
   new chartTypes[chartType](svg, config);
 }
 

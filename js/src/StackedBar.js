@@ -1,4 +1,4 @@
-import { select, mouse } from 'd3-selection';
+import { select, mouse, event as d3Event } from 'd3-selection';
 import { scaleBand, scaleLinear } from 'd3-scale';
 
 import addAxis from './utils/addAxis';
@@ -157,6 +157,18 @@ class StackedBar {
       .attr('filter', this.filter)
       .on('mouseover', () => tooltip.show())
       .on('mouseout', () => tooltip.hide())
+      .on('click', (d, i) => {
+        const colIndex = i % dataLength;
+        const dsIndex = Math.floor(i / dataLength);
+        if (this.options.onSelect) {
+          this.options.onSelect({
+            index: colIndex,
+            label: this.data.labels[colIndex],
+            dataset: this.data.datasets[dsIndex].label,
+            value: d,
+          }, d3Event.shiftKey);
+        }
+      })
       .on('mousemove', (d, i, nodes) => {
         const tipX = mouse(nodes[i])[0] + margin.left + 10;
         const tipY = mouse(nodes[i])[1] + margin.top + 10;

@@ -2,98 +2,51 @@ import { select, mouse, event as d3Event } from 'd3-selection';
 import { scaleBand, scaleLinear } from 'd3-scale';
 
 import addAxis from './utils/addAxis';
-import addLabels from './utils/addLabels';
-import Tooltip from './components/Tooltip';
 import addLegend from './utils/addLegend';
-import addFont from './utils/addFont';
-import addFilter from './utils/addFilter';
-import colors from './utils/colors';
+import { tooltipPositionType } from './components/Tooltip';
 import config from './config';
-
-const margin = {
-  top: 50, right: 30, bottom: 50, left: 50,
-};
+import {
+  applyDefaults, setupMargin, resolveFilterAndFont,
+  createSvgEl, setupChartGroup, createTooltip,
+} from './utils/initChart';
 
 class StackedBar {
   constructor(svg, {
     title, xLabel, yLabel, data: { labels, datasets }, options,
   }) {
-    this.options = {
-      unxkcdify: false,
-      yTickCount: 3,
-      dataColors: colors,
-      fontFamily: 'xkcd',
-      strokeColor: 'black',
-      backgroundColor: 'white',
+    this.options = applyDefaults({
+      yTickCount: config.defaultTickCount,
       legendPosition: config.positionType.upLeft,
       showLegend: true,
       ...options,
-    };
-    this.options.dataColors = datasets.map(
-      (ds, i) => ds.color || this.options.dataColors[i % this.options.dataColors.length],
+    }, datasets);
+    this.title = title;
+    this.xLabel = xLabel;
+    this.yLabel = yLabel;
+    this.data = { labels, datasets };
+
+    const margin = setupMargin({ title, xLabel, yLabel });
+    const { filter, fontFamily } = resolveFilterAndFont(this.options, false);
+    this.filter = filter;
+    this.fontFamily = fontFamily;
+    this.svgEl = createSvgEl(svg, { fontFamily, backgroundColor: this.options.backgroundColor });
+    const { chart, width, height } = setupChartGroup(
+      this.svgEl, margin, { title, xLabel, yLabel, strokeColor: this.options.strokeColor },
     );
-    if (title) {
-      this.title = title;
-      margin.top = 60;
-    }
-    if (xLabel) {
-      this.xLabel = xLabel;
-      margin.bottom = 50;
-    }
-    if (yLabel) {
-      this.yLabel = yLabel;
-      margin.left = 70;
-    }
-    this.data = {
-      labels,
-      datasets,
-    };
-    this.filter = 'url(#xkcdify)';
-    this.fontFamily = this.options.fontFamily || 'xkcd';
-    if (this.options.unxkcdify) {
-      this.filter = null;
-      this.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-    }
-
-    this.svgEl = select(svg)
-      .style('stroke-width', '3')
-      .style('font-family', this.fontFamily)
-      .style('background', this.options.backgroundColor)
-      .attr('width', svg.parentElement.clientWidth)
-      .attr('height', Math.min((svg.parentElement.clientWidth * 2) / 3, window.innerHeight));
-
-    this.svgEl.selectAll('*').remove();
-
-    this.chart = this.svgEl.append('g')
-      .attr('transform',
-        `translate(${margin.left},${margin.top})`);
-    this.width = this.svgEl.attr('width') - margin.left - margin.right;
-    this.height = this.svgEl.attr('height') - margin.top - margin.bottom;
-
-    addFont(this.svgEl);
-    addFilter(this.svgEl);
+    this.chart = chart;
+    this.width = width;
+    this.height = height;
+    this.margin = margin;
     this.render();
   }
 
   render() {
-    if (this.title) addLabels.title(this.svgEl, this.title, this.options.strokeColor);
-    if (this.xLabel) addLabels.xLabel(this.svgEl, this.xLabel, this.options.strokeColor);
-    if (this.yLabel) addLabels.yLabel(this.svgEl, this.yLabel, this.options.strokeColor);
-
-    const tooltip = new Tooltip({
-      parent: this.svgEl,
-      title: 'tooltip',
-      items: [{ color: 'red', text: 'weweyang: 12' }, { color: 'blue', text: 'timqian: 13' }],
-      position: { x: 30, y: 30, type: config.positionType.upRight },
-      unxkcdify: this.options.unxkcdify,
-      backgroundColor: this.options.backgroundColor,
-      strokeColor: this.options.strokeColor,
-    });
+    const tooltip = createTooltip(this.svgEl, this.options);
 
     const xScale = scaleBand()
       .range([0, this.width])
       .domain(this.data.labels)
-      .padding(0.4);
+      .padding(config.bandPadding);
 
     const allCols = this.data.datasets
       .reduce((r, a) => a.data.map((b, i) => (r[i] || 0) + b), []);
@@ -104,10 +57,9 @@ class StackedBar {
 
     const graphPart = this.chart.append('g');
 
-    // axis
     addAxis.xAxis(graphPart, {
       xScale,
-      tickCount: 3,
+      tickCount: config.defaultTickCount,
       moveDown: this.height,
       fontFamily: this.fontFamily,
       unxkcdify: this.options.unxkcdify,
@@ -115,15 +67,12 @@ class StackedBar {
     });
     addAxis.yAxis(graphPart, {
       yScale,
-      tickCount: this.options.yTickCount || 3,
+      tickCount: this.options.yTickCount,
       fontFamily: this.fontFamily,
       unxkcdify: this.options.unxkcdify,
       stroke: this.options.strokeColor,
     });
 
-    // Merge all the lists into a single list, and store the
-    // offests in a corresponding list.  Use dataLength to
-    // track how many total columns there should be.
     const mergedData = this.data.datasets
       .reduce((pre, cur) => pre.concat(cur.data), []);
 
@@ -139,7 +88,6 @@ class StackedBar {
         return r;
       }, []).flat();
 
-    // Bars
     graphPart.selectAll('.xkcd-chart-stacked-bar')
       .data(mergedData)
       .enter()
@@ -152,8 +100,8 @@ class StackedBar {
       .attr('fill', (d, i) => this.options.dataColors[Math.floor(i / dataLength)])
       .attr('pointer-events', 'all')
       .attr('stroke', this.options.strokeColor)
-      .attr('stroke-width', 3)
-      .attr('rx', 2)
+      .attr('stroke-width', config.barStrokeWidth)
+      .attr('rx', config.barCornerRadius)
       .attr('filter', this.filter)
       .on('mouseover', () => tooltip.show())
       .on('mouseout', () => tooltip.hide())
@@ -170,22 +118,13 @@ class StackedBar {
         }
       })
       .on('mousemove', (d, i, nodes) => {
-        const tipX = mouse(nodes[i])[0] + margin.left + 10;
-        const tipY = mouse(nodes[i])[1] + margin.top + 10;
+        const tipX = mouse(nodes[i])[0] + this.margin.left + config.tooltipMouseOffset;
+        const tipY = mouse(nodes[i])[1] + this.margin.top + config.tooltipMouseOffset;
 
         const tooltipItems = this.data.datasets.map((dataset, j) => ({
           color: this.options.dataColors[j],
           text: `${this.data.datasets[j].label || ''}: ${this.data.datasets[j].data[i % dataLength]}`,
         })).reverse();
-
-        let tooltipPositionType = config.positionType.downRight;
-        if (tipX > this.width / 2 && tipY < this.height / 2) {
-          tooltipPositionType = config.positionType.downLeft;
-        } else if (tipX > this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upLeft;
-        } else if (tipX < this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upRight;
-        }
 
         tooltip.update({
           title: this.data.labels[i],
@@ -193,7 +132,7 @@ class StackedBar {
           position: {
             x: tipX,
             y: tipY,
-            type: tooltipPositionType,
+            type: tooltipPositionType(tipX, tipY, this.width, this.height),
           },
         });
       });

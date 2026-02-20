@@ -1,89 +1,52 @@
 import { select, event as d3Event } from 'd3-selection';
 import { line, curveLinearClosed } from 'd3-shape';
 import { scaleLinear } from 'd3-scale';
-import addLegend from './utils/addLegend';
-import addLabels from './utils/addLabels';
-import Tooltip from './components/Tooltip';
-import addFont from './utils/addFont';
-import addFilter from './utils/addFilter';
-import colors from './utils/colors';
-import config from './config';
 
-const margin = 50;
+import addLegend from './utils/addLegend';
+import { tooltipPositionType } from './components/Tooltip';
+import config from './config';
+import {
+  applyDefaults, resolveFilterAndFont,
+  createSvgEl, setupChartGroupSimple, createTooltip,
+} from './utils/initChart';
+
 const angleOffset = -Math.PI / 2;
-const areaOpacity = 0.2;
 
 class Radar {
   constructor(svg, {
-    title,
-    data: { labels, datasets },
-    options,
+    title, data: { labels, datasets }, options,
   }) {
-    this.options = {
+    this.options = applyDefaults({
       showLabels: false,
-      ticksCount: 3,
+      ticksCount: config.defaultTickCount,
       showLegend: false,
       legendPosition: config.positionType.upLeft,
-      dataColors: colors,
-      fontFamily: 'xkcd',
       dotSize: 1,
-      strokeColor: 'black',
-      backgroundColor: 'white',
       ...options,
-    };
-    this.options.dataColors = datasets.map(
-      (ds, i) => ds.color || this.options.dataColors[i % this.options.dataColors.length],
-    );
+    }, datasets);
     this.title = title;
-    this.data = {
-      labels,
-      datasets,
-    };
-    // TODO: find the longest dataset or throw an error for inconsistent datasets
+    this.data = { labels, datasets };
     this.directionsCount = datasets[0].data.length;
-    this.filter = 'url(#xkcdify-pie)';
-    this.fontFamily = this.options.fontFamily || 'xkcd';
-    if (this.options.unxkcdify) {
-      this.filter = null;
-      this.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-    }
-    this.svgEl = select(svg)
-      .style('stroke-width', '3')
-      .style('font-family', this.fontFamily)
-      .style('background', this.options.backgroundColor)
-      .attr('width', svg.parentElement.clientWidth)
-      .attr('height', Math.min((svg.parentElement.clientWidth * 2) / 3, window.innerHeight));
-    this.svgEl.selectAll('*').remove();
 
-    this.width = this.svgEl.attr('width');
-    this.height = this.svgEl.attr('height');
-    this.chart = this.svgEl.append('g')
-      .attr('transform',
-        `translate(${this.width / 2},${this.height / 2})`);
-
-    addFont(this.svgEl);
-    addFilter(this.svgEl);
+    const { filter, fontFamily } = resolveFilterAndFont(this.options, true);
+    this.filter = filter;
+    this.fontFamily = fontFamily;
+    this.svgEl = createSvgEl(svg, { fontFamily, backgroundColor: this.options.backgroundColor });
+    const { chart, width, height } = setupChartGroupSimple(
+      this.svgEl, { title, strokeColor: this.options.strokeColor },
+    );
+    this.chart = chart;
+    this.width = width;
+    this.height = height;
     this.render();
   }
 
   render() {
-    if (this.title) {
-      addLabels.title(this.svgEl, this.title, this.options.strokeColor);
-    }
+    const tooltip = createTooltip(this.svgEl, this.options);
 
-    const tooltip = new Tooltip({
-      parent: this.svgEl,
-      title: '',
-      items: [],
-      position: { x: 0, y: 0, type: config.positionType.downRight },
-      unxkcdify: this.options.unxkcdify,
-      strokeColor: this.options.strokeColor,
-      backgroundColor: this.options.backgroundColor,
-    });
-
-    const dotInitSize = 3.5 * (this.options.dotSize || 1);
-    const dotHoverSize = 6 * (this.options.dotSize || 1);
-    const radius = Math.min(this.width, this.height) / 2 - margin;
+    const dotInitSize = config.dotInitRadius * (this.options.dotSize || 1);
+    const dotHoverSize = config.dotHoverRadius * (this.options.dotSize || 1);
+    const radius = Math.min(this.width, this.height) / 2 - config.marginScalar;
     const angleStep = (Math.PI * 2) / this.directionsCount;
 
     const allDataValues = this.data.datasets
@@ -102,7 +65,7 @@ class Radar {
       .curve(curveLinearClosed);
 
     // grid
-    const ticks = valueScale.ticks(this.options.ticksCount || 3);
+    const ticks = valueScale.ticks(this.options.ticksCount || config.defaultTickCount);
     const grid = this.chart.append('g')
       .attr('class', 'xkcd-chart-radar-grid')
       .attr('stroke-width', '1')
@@ -136,7 +99,7 @@ class Radar {
       .attr('class', 'xkcd-chart-radar-tick')
       .attr('x', (d) => getX(d, 0))
       .attr('y', (d) => getY(d, 0))
-      .style('font-size', '16')
+      .style('font-size', config.tickFontSize)
       .style('fill', this.options.strokeColor)
       .attr('text-anchor', 'end')
       .attr('dx', '-.125em')
@@ -149,20 +112,14 @@ class Radar {
         .enter()
         .append('text')
         .attr('class', 'xkcd-chart-radar-label')
-        .style('font-size', '16')
+        .style('font-size', config.tickFontSize)
         .style('fill', this.options.strokeColor)
         .attr('x', (d, i) => (radius + 10) * Math.cos(angleStep * i + angleOffset))
         .attr('y', (d, i) => (radius + 10) * Math.sin(angleStep * i + angleOffset))
         .attr('dy', '.35em')
         .attr('text-anchor', (d, i, nodes) => {
           const node = select(nodes[i]);
-          let anchor = 'start';
-
-          if (node.attr('x') < 0) {
-            anchor = 'end';
-          }
-
-          return anchor;
+          return node.attr('x') < 0 ? 'end' : 'start';
         })
         .text((d, i) => this.data.labels[i]);
     }
@@ -202,14 +159,6 @@ class Radar {
 
         const tipX = getX(d, i) + this.width / 2;
         const tipY = getY(d, i) + this.height / 2;
-        let tooltipPositionType = config.positionType.downRight;
-        if (tipX > this.width / 2 && tipY < this.height / 2) {
-          tooltipPositionType = config.positionType.downLeft;
-        } else if (tipX > this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upLeft;
-        } else if (tipX < this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upRight;
-        }
         tooltip.update({
           title: this.data.labels[i],
           items: this.data.datasets.map((dataset, datasetIndex) => ({
@@ -219,14 +168,13 @@ class Radar {
           position: {
             x: tipX,
             y: tipY,
-            type: tooltipPositionType,
+            type: tooltipPositionType(tipX, tipY, this.width, this.height),
           },
         });
         tooltip.show();
       })
       .on('mouseout', (d, i, nodes) => {
         select(nodes[i]).attr('r', dotInitSize);
-
         tooltip.hide();
       });
 
@@ -236,14 +184,13 @@ class Radar {
       .append('path')
       .attr('d', theLine)
       .attr('pointer-events', 'none')
-      .style('fill-opacity', areaOpacity);
+      .style('fill-opacity', config.radarAreaOpacity);
 
     // legend
     if (this.options.showLegend) {
       const legendItems = this.data.datasets
         .map((data, i) => ({ color: this.options.dataColors[i], text: data.label || '' }));
 
-      // move legend down to prevent overlaping with title
       const legendG = this.svgEl.append('g')
         .attr('transform', 'translate(0, 30)');
 

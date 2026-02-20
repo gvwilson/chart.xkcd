@@ -3,35 +3,36 @@ import config from '../config';
 export default function addLegend(parent, {
   items, position, unxkcdify, parentWidth, parentHeight, strokeColor, backgroundColor,
 }) {
-  const filter = !unxkcdify ? 'url(#xkcdify)' : null;
+  const filter = !unxkcdify ? config.filterUrl : null;
 
   const legend = parent.append('svg');
   const backgroundLayer = legend.append('svg');
   const textLayer = legend.append('svg');
 
   items.forEach((item, i) => {
+    const itemY = 17 + config.itemRowHeight * i;
+
     textLayer.append('rect')
       .style('fill', item.color)
-      .attr('width', 8)
-      .attr('height', 8)
+      .attr('width', config.swatchSize)
+      .attr('height', config.swatchSize)
       .attr('filter', filter)
-      .attr('rx', 2)
-      .attr('ry', 2)
-      .attr('x', 15)
-      .attr('y', 17 + 20 * i);
+      .attr('rx', config.swatchCornerRadius)
+      .attr('ry', config.swatchCornerRadius)
+      .attr('x', config.itemXOffset)
+      .attr('y', itemY);
 
     textLayer.append('text')
-      .style('font-size', '15')
+      .style('font-size', config.tooltipFontSize)
       .style('fill', strokeColor)
-      .attr('x', 15 + 12)
-      .attr('y', 17 + 20 * i + 8)
+      .attr('x', config.itemXOffset + config.itemTextOffset)
+      .attr('y', itemY + config.swatchSize)
       .text(item.text);
   });
 
-  // wait for textLayer to render, a bit wired
   setTimeout(() => {
     const bbox = textLayer.node().getBBox();
-    const backgroundWidth = bbox.width + 15;
+    const backgroundWidth = bbox.width + config.itemXOffset;
     const backgroundHeight = bbox.height + 10;
 
     let legendX = 0;
@@ -49,21 +50,19 @@ export default function addLegend(parent, {
       legendX = parentWidth - backgroundWidth - 13;
     }
 
-    // add background
     backgroundLayer.append('rect')
       .style('fill', backgroundColor)
       .attr('filter', filter)
-      .attr('fill-opacity', 0.85)
+      .attr('fill-opacity', config.legendBackgroundOpacity)
       .attr('stroke', strokeColor)
-      .attr('stroke-width', 2)
+      .attr('stroke-width', config.backgroundStrokeWidth)
       .attr('width', backgroundWidth)
       .attr('height', backgroundHeight)
-      .attr('rx', 5)
-      .attr('ry', 5)
+      .attr('rx', config.backgroundCornerRadius)
+      .attr('ry', config.backgroundCornerRadius)
       .attr('x', 8)
       .attr('y', 5);
 
-    // get legend
     legend
       .attr('x', legendX)
       .attr('y', legendY);

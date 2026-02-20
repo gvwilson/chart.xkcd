@@ -1,34 +1,24 @@
 import config from '../config';
 
+export function tooltipPositionType(tipX, tipY, width, height) {
+  if (tipX > width / 2 && tipY < height / 2) {
+    return config.positionType.downLeft;
+  } else if (tipX > width / 2 && tipY > height / 2) {
+    return config.positionType.upLeft;
+  } else if (tipX < width / 2 && tipY > height / 2) {
+    return config.positionType.upRight;
+  }
+  return config.positionType.downRight;
+}
+
 class Tooltip {
-  /**
-   *
-   * @param {String} parent
-   * @param {String} title
-   * @param {Array} items
-   * @param {Object} position
-   * @example
-   * {
-   *    parent: {}, // a d3 selection component
-   *    title: 'tooltip title',
-   *    items:[{
-   *      color: 'red',
-   *      text: 'tim: 13'
-   *    }],
-   *    position: {
-   *      type: 'upleft'
-   *      x: 100,
-   *      y: 230,
-   *    }
-   * }
-   */
   constructor({
     parent, title, items, position, unxkcdify, backgroundColor, strokeColor,
   }) {
     this.title = title;
     this.items = items;
     this.position = position;
-    this.filter = !unxkcdify ? 'url(#xkcdify)' : null;
+    this.filter = !unxkcdify ? config.filterUrl : null;
     this.backgroundColor = backgroundColor;
     this.strokeColor = strokeColor;
 
@@ -39,11 +29,11 @@ class Tooltip {
 
     this.tipBackground = this.svg.append('rect')
       .style('fill', this.backgroundColor)
-      .attr('fill-opacity', 0.9)
-      .attr('stroke', strokeColor) // FIXME: find a good way to calculate boder color form this.strokeColor
-      .attr('stroke-width', 2)
-      .attr('rx', 5)
-      .attr('ry', 5)
+      .attr('fill-opacity', config.tooltipBackgroundOpacity)
+      .attr('stroke', strokeColor)
+      .attr('stroke-width', config.backgroundStrokeWidth)
+      .attr('rx', config.backgroundCornerRadius)
+      .attr('ry', config.backgroundCornerRadius)
       .attr('filter', this.filter)
       .attr('width', this._getBackgroundWidth())
       .attr('height', this._getBackgroundHeight())
@@ -51,17 +41,14 @@ class Tooltip {
       .attr('y', 5);
 
     this.tipTitle = this.svg.append('text')
-      .style('font-size', 15)
+      .style('font-size', config.tooltipFontSize)
       .style('font-weight', 'bold')
       .style('fill', this.strokeColor)
-      .attr('x', 15)
+      .attr('x', config.itemXOffset)
       .attr('y', 25)
       .text(title);
 
-    this.tipItems = items.map((item, i) => {
-      const g = this._generateTipItem(item, i);
-      return g;
-    });
+    this.tipItems = items.map((item, i) => this._generateTipItem(item, i));
   }
 
   show() {
@@ -72,7 +59,6 @@ class Tooltip {
     this.svg.style('visibility', 'hidden');
   }
 
-  // update tooltip position / content
   update({ title, items, position }) {
     if (title && title !== this.title) {
       this.title = title;
@@ -84,10 +70,7 @@ class Tooltip {
 
       this.tipItems.forEach((g) => g.svg.remove());
 
-      this.tipItems = this.items.map((item, i) => {
-        const g = this._generateTipItem(item, i);
-        return g;
-      });
+      this.tipItems = this.items.map((item, i) => this._generateTipItem(item, i));
 
       const maxWidth = Math.max(
         ...this.tipItems.map((item) => item.width),
@@ -95,7 +78,7 @@ class Tooltip {
       );
 
       this.tipBackground
-        .attr('width', maxWidth + 15)
+        .attr('width', maxWidth + config.itemXOffset)
         .attr('height', this._getBackgroundHeight());
     }
 
@@ -108,31 +91,30 @@ class Tooltip {
 
   _generateTipItem(item, i) {
     const svg = this.svg.append('svg');
+    const itemY = 37 + config.itemRowHeight * i;
 
     svg.append('rect')
       .style('fill', item.color)
-      .attr('width', 8)
-      .attr('height', 8)
-      .attr('rx', 2)
-      .attr('ry', 2)
+      .attr('width', config.swatchSize)
+      .attr('height', config.swatchSize)
+      .attr('rx', config.swatchCornerRadius)
+      .attr('ry', config.swatchCornerRadius)
       .attr('filter', this.filter)
-      .attr('x', 15)
-      .attr('y', 37 + 20 * i);
+      .attr('x', config.itemXOffset)
+      .attr('y', itemY);
 
     svg.append('text')
-      .style('font-size', '15')
+      .style('font-size', config.tooltipFontSize)
       .style('fill', this.strokeColor)
-      .attr('x', 15 + 12)
-      .attr('y', 37 + 20 * i + 8)
+      .attr('x', config.itemXOffset + config.itemTextOffset)
+      .attr('y', itemY + config.swatchSize)
       .text(item.text);
 
     const bbox = svg.node().getBBox();
-    const width = bbox.width + 15;
-    const height = bbox.height + 10;
     return {
       svg,
-      width,
-      height,
+      width: bbox.width + config.itemXOffset,
+      height: bbox.height + 10,
     };
   }
 
@@ -141,13 +123,12 @@ class Tooltip {
       (pre, cur) => (pre > cur.text.length ? pre : cur.text.length), 0,
     );
     const maxLength = Math.max(maxItemLength, this.title.length);
-
     return maxLength * 7.4 + 25;
   }
 
   _getBackgroundHeight() {
     const rows = this.items.length + 1;
-    return rows * 20 + 10;
+    return rows * config.itemRowHeight + 10;
   }
 
   _getUpLeftX() {
@@ -155,7 +136,7 @@ class Tooltip {
       || this.position.type === config.positionType.downRight) {
       return this.position.x;
     }
-    return this.position.x - this._getBackgroundWidth() - 20;
+    return this.position.x - this._getBackgroundWidth() - config.itemRowHeight;
   }
 
   _getUpLeftY() {
@@ -163,7 +144,7 @@ class Tooltip {
       || this.position.type === config.positionType.downRight) {
       return this.position.y;
     }
-    return this.position.y - this._getBackgroundHeight() - 20;
+    return this.position.y - this._getBackgroundHeight() - config.itemRowHeight;
   }
 }
 

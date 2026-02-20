@@ -1,4 +1,16 @@
 import { axisBottom, axisLeft } from 'd3-axis';
+import config from '../config';
+
+function styleAxisParts(parent, { fontFamily, unxkcdify, stroke }) {
+  parent.selectAll('.domain')
+    .attr('filter', !unxkcdify ? config.filterUrl : null)
+    .style('stroke', stroke);
+
+  parent.selectAll('.tick > text')
+    .style('font-family', fontFamily)
+    .style('font-size', config.tickFontSize)
+    .style('fill', stroke);
+}
 
 const yAxis = (parent, {
   yScale, tickCount, fontFamily, unxkcdify, stroke,
@@ -11,15 +23,7 @@ const yAxis = (parent, {
         .tickPadding(10)
         .ticks(tickCount, 's'),
     );
-
-  parent.selectAll('.domain')
-    .attr('filter', !unxkcdify ? 'url(#xkcdify)' : null)
-    .style('stroke', stroke);
-
-  parent.selectAll('.tick > text')
-    .style('font-family', fontFamily)
-    .style('font-size', '16')
-    .style('fill', stroke);
+  styleAxisParts(parent, { fontFamily, unxkcdify, stroke });
 };
 
 const xAxis = (parent, {
@@ -34,15 +38,7 @@ const xAxis = (parent, {
         .tickPadding(6)
         .ticks(tickCount),
     );
-
-  parent.selectAll('.domain')
-    .attr('filter', !unxkcdify ? 'url(#xkcdify)' : null)
-    .style('stroke', stroke);
-
-  parent.selectAll('.tick > text')
-    .style('font-family', fontFamily)
-    .style('font-size', '16')
-    .style('fill', stroke);
+  styleAxisParts(parent, { fontFamily, unxkcdify, stroke });
 };
 
 export default {

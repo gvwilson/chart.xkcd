@@ -3,91 +3,46 @@ import { select, mouse, event as d3Event } from 'd3-selection';
 import { scalePoint, scaleLinear } from 'd3-scale';
 
 import addAxis from './utils/addAxis';
-import addLabels from './utils/addLabels';
-import Tooltip from './components/Tooltip';
 import addLegend from './utils/addLegend';
-import addFont from './utils/addFont';
-import addFilter from './utils/addFilter';
-import colors from './utils/colors';
+import { tooltipPositionType } from './components/Tooltip';
 import config from './config';
-
-const margin = {
-  top: 50, right: 30, bottom: 50, left: 50,
-};
+import {
+  applyDefaults, setupMargin, resolveFilterAndFont,
+  createSvgEl, setupChartGroup, createTooltip,
+} from './utils/initChart';
 
 class Line {
   constructor(svg, {
     title, xLabel, yLabel, data: { labels, datasets }, options,
   }) {
-    this.options = {
-      unxkcdify: false,
-      yTickCount: 3,
+    this.options = applyDefaults({
+      yTickCount: config.defaultTickCount,
       legendPosition: config.positionType.upLeft,
-      dataColors: colors,
-      fontFamily: 'xkcd',
-      strokeColor: 'black',
-      backgroundColor: 'white',
       showLegend: true,
       ...options,
-    };
-    this.options.dataColors = datasets.map(
-      (ds, i) => ds.color || this.options.dataColors[i % this.options.dataColors.length],
+    }, datasets);
+    this.title = title;
+    this.xLabel = xLabel;
+    this.yLabel = yLabel;
+    this.data = { labels, datasets };
+
+    const margin = setupMargin({ title, xLabel, yLabel });
+    const { filter, fontFamily } = resolveFilterAndFont(this.options, false);
+    this.filter = filter;
+    this.fontFamily = fontFamily;
+    this.svgEl = createSvgEl(svg, { fontFamily, backgroundColor: this.options.backgroundColor });
+    const { chart, width, height } = setupChartGroup(
+      this.svgEl, margin, { title, xLabel, yLabel, strokeColor: this.options.strokeColor },
     );
-    if (title) {
-      this.title = title;
-      margin.top = 60;
-    }
-    if (xLabel) {
-      this.xLabel = xLabel;
-      margin.bottom = 50;
-    }
-    if (yLabel) {
-      this.yLabel = yLabel;
-      margin.left = 70;
-    }
-    this.data = {
-      labels,
-      datasets,
-    };
-    this.filter = 'url(#xkcdify)';
-    this.fontFamily = this.options.fontFamily || 'xkcd';
-    if (this.options.unxkcdify) {
-      this.filter = null;
-      this.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-    }
-
-    this.svgEl = select(svg)
-      .style('stroke-width', '3')
-      .style('font-family', this.fontFamily)
-      .style('background', this.options.backgroundColor)
-      .attr('width', svg.parentElement.clientWidth)
-      .attr('height', Math.min((svg.parentElement.clientWidth * 2) / 3, window.innerHeight));
-    this.svgEl.selectAll('*').remove();
-
-    this.chart = this.svgEl.append('g')
-      .attr('transform',
-        `translate(${margin.left},${margin.top})`);
-    this.width = this.svgEl.attr('width') - margin.left - margin.right;
-    this.height = this.svgEl.attr('height') - margin.top - margin.bottom;
-
-    addFont(this.svgEl);
-    addFilter(this.svgEl);
+    this.chart = chart;
+    this.width = width;
+    this.height = height;
+    this.margin = margin;
     this.render();
   }
 
   render() {
-    if (this.title) addLabels.title(this.svgEl, this.title, this.options.strokeColor);
-    if (this.xLabel) addLabels.xLabel(this.svgEl, this.xLabel, this.options.strokeColor);
-    if (this.yLabel) addLabels.yLabel(this.svgEl, this.yLabel, this.options.strokeColor);
-    const tooltip = new Tooltip({
-      parent: this.svgEl,
-      title: '',
-      items: [{ color: 'red', text: 'weweyang' }, { color: 'blue', text: 'timqian' }],
-      position: { x: 60, y: 60, type: config.positionType.downRight },
-      unxkcdify: this.options.unxkcdify,
-      backgroundColor: this.options.backgroundColor,
-      strokeColor: this.options.strokeColor,
-    });
+    const tooltip = createTooltip(this.svgEl, this.options);
 
     const xScale = scalePoint()
       .domain(this.data.labels)
@@ -103,10 +58,9 @@ class Line {
     const graphPart = this.chart.append('g')
       .attr('pointer-events', 'all');
 
-    // axis
     addAxis.xAxis(graphPart, {
       xScale,
-      tickCount: 3,
+      tickCount: config.defaultTickCount,
       moveDown: this.height,
       fontFamily: this.fontFamily,
       unxkcdify: this.options.unxkcdify,
@@ -114,7 +68,7 @@ class Line {
     });
     addAxis.yAxis(graphPart, {
       yScale,
-      tickCount: this.options.yTickCount || 3,
+      tickCount: this.options.yTickCount,
       fontFamily: this.fontFamily,
       unxkcdify: this.options.unxkcdify,
       stroke: this.options.strokeColor,
@@ -153,14 +107,13 @@ class Line {
       .append('circle')
       .style('stroke', this.options.dataColors[i])
       .style('fill', this.options.dataColors[i])
-      .attr('r', 3.5)
+      .attr('r', config.dotInitRadius)
       .style('visibility', 'hidden'));
 
     graphPart.append('rect')
       .attr('width', this.width)
       .attr('height', this.height)
       .attr('fill', 'none')
-      // .attr('stroke', 'black')
       .on('mouseover', () => {
         circles.forEach((circle) => circle.style('visibility', 'visible'));
         verticalLine.style('visibility', 'visible');
@@ -173,9 +126,9 @@ class Line {
       })
       .on('click', (d, i, nodes) => {
         if (this.options.onSelect) {
-          const labelXs = this.data.labels.map((label) => xScale(label) + margin.left);
+          const labelXs = this.data.labels.map((label) => xScale(label) + this.margin.left);
           const mouseLabelDistances = labelXs.map(
-            (labelX) => Math.abs(labelX - mouse(nodes[i])[0] - margin.left),
+            (labelX) => Math.abs(labelX - mouse(nodes[i])[0] - this.margin.left),
           );
           const nearestIndex = mouseLabelDistances.indexOf(Math.min(...mouseLabelDistances));
           this.options.onSelect({
@@ -189,52 +142,42 @@ class Line {
         }
       })
       .on('mousemove', (d, i, nodes) => {
-        const tipX = mouse(nodes[i])[0] + margin.left + 10;
-        const tipY = mouse(nodes[i])[1] + margin.top + 10;
+        const tipX = mouse(nodes[i])[0] + this.margin.left + config.tooltipMouseOffset;
+        const tipY = mouse(nodes[i])[1] + this.margin.top + config.tooltipMouseOffset;
 
-        const labelXs = this.data.labels.map((label) => xScale(label) + margin.left);
-        const mouseLableDistances = labelXs.map(
-          (labelX) => Math.abs(labelX - mouse(nodes[i])[0] - margin.left),
+        const labelXs = this.data.labels.map((label) => xScale(label) + this.margin.left);
+        const mouseLabelDistances = labelXs.map(
+          (labelX) => Math.abs(labelX - mouse(nodes[i])[0] - this.margin.left),
         );
-        const mostNearLabelIndex = mouseLableDistances.indexOf(Math.min(...mouseLableDistances));
+        const nearestIndex = mouseLabelDistances.indexOf(Math.min(...mouseLabelDistances));
 
         verticalLine
-          .attr('x1', xScale(this.data.labels[mostNearLabelIndex]))
-          .attr('x2', xScale(this.data.labels[mostNearLabelIndex]));
+          .attr('x1', xScale(this.data.labels[nearestIndex]))
+          .attr('x2', xScale(this.data.labels[nearestIndex]));
 
         this.data.datasets.forEach((dataset, j) => {
           circles[j]
             .style('visibility', 'visible')
-            .attr('cx', xScale(this.data.labels[mostNearLabelIndex]))
-            .attr('cy', yScale(dataset.data[mostNearLabelIndex]));
+            .attr('cx', xScale(this.data.labels[nearestIndex]))
+            .attr('cy', yScale(dataset.data[nearestIndex]));
         });
 
         const tooltipItems = this.data.datasets.map((dataset, j) => ({
           color: this.options.dataColors[j],
-          text: `${this.data.datasets[j].label || ''}: ${this.data.datasets[j].data[mostNearLabelIndex]}`,
+          text: `${this.data.datasets[j].label || ''}: ${this.data.datasets[j].data[nearestIndex]}`,
         }));
 
-        let tooltipPositionType = config.positionType.downRight;
-        if (tipX > this.width / 2 && tipY < this.height / 2) {
-          tooltipPositionType = config.positionType.downLeft;
-        } else if (tipX > this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upLeft;
-        } else if (tipX < this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upRight;
-        }
-
         tooltip.update({
-          title: this.data.labels[mostNearLabelIndex],
+          title: this.data.labels[nearestIndex],
           items: tooltipItems,
           position: {
             x: tipX,
             y: tipY,
-            type: tooltipPositionType,
+            type: tooltipPositionType(tipX, tipY, this.width, this.height),
           },
         });
       });
 
-    // Legend
     if (this.options.showLegend) {
       const legendItems = this.data.datasets
         .map((dataset, i) => ({

@@ -4,97 +4,50 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import dayjs from 'dayjs';
 
 import addAxis from './utils/addAxis';
-import addLabels from './utils/addLabels';
-import Tooltip from './components/Tooltip';
 import addLegend from './utils/addLegend';
-import addFont from './utils/addFont';
-import addFilter from './utils/addFilter';
-import colors from './utils/colors';
+import { tooltipPositionType } from './components/Tooltip';
 import config from './config';
-
-const margin = {
-  top: 50, right: 30, bottom: 50, left: 50,
-};
+import {
+  applyDefaults, setupMargin, resolveFilterAndFont,
+  createSvgEl, setupChartGroup, createTooltip,
+} from './utils/initChart';
 
 class Scatter {
   constructor(svg, {
     title, xLabel, yLabel, data: { datasets }, options,
   }) {
-    this.options = {
-      unxkcdify: false,
+    this.options = applyDefaults({
       dotSize: 1,
       showLine: false,
       timeFormat: '',
-      xTickCount: 3,
-      yTickCount: 3,
+      xTickCount: config.defaultTickCount,
+      yTickCount: config.defaultTickCount,
       legendPosition: config.positionType.upLeft,
-      dataColors: colors,
-      fontFamily: 'xkcd',
-      strokeColor: 'black',
-      backgroundColor: 'white',
       showLegend: true,
       ...options,
-    };
-    this.options.dataColors = datasets.map(
-      (ds, i) => ds.color || this.options.dataColors[i % this.options.dataColors.length],
+    }, datasets);
+    this.title = title;
+    this.xLabel = xLabel;
+    this.yLabel = yLabel;
+    this.data = { datasets };
+
+    const margin = setupMargin({ title, xLabel, yLabel });
+    const { filter, fontFamily } = resolveFilterAndFont(this.options, false);
+    this.filter = filter;
+    this.fontFamily = fontFamily;
+    this.svgEl = createSvgEl(svg, { fontFamily, backgroundColor: this.options.backgroundColor });
+    const { chart, width, height } = setupChartGroup(
+      this.svgEl, margin, { title, xLabel, yLabel, strokeColor: this.options.strokeColor },
     );
-    // TODO: extract a function?
-    if (title) {
-      this.title = title;
-      margin.top = 60;
-    }
-    if (xLabel) {
-      this.xLabel = xLabel;
-      margin.bottom = 50;
-    }
-    if (yLabel) {
-      this.yLabel = yLabel;
-      margin.left = 70;
-    }
-    this.data = {
-      datasets,
-    };
-
-    this.filter = 'url(#xkcdify)';
-    this.fontFamily = this.options.fontFamily || 'xkcd';
-    if (this.options.unxkcdify) {
-      this.filter = null;
-      this.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-    }
-
-    this.svgEl = select(svg)
-      .style('stroke-width', 3)
-      .style('font-family', this.fontFamily)
-      .style('background', this.options.backgroundColor)
-      .attr('width', svg.parentElement.clientWidth)
-      .attr('height', Math.min((svg.parentElement.clientWidth * 2) / 3, window.innerHeight));
-    this.svgEl.selectAll('*').remove();
-
-    this.chart = this.svgEl.append('g')
-      .attr('transform',
-        `translate(${margin.left},${margin.top})`);
-
-    this.width = this.svgEl.attr('width') - margin.left - margin.right;
-    this.height = this.svgEl.attr('height') - margin.top - margin.bottom;
-    addFont(this.svgEl);
-    addFilter(this.svgEl);
+    this.chart = chart;
+    this.width = width;
+    this.height = height;
+    this.margin = margin;
     this.render();
   }
 
   render() {
-    if (this.title) addLabels.title(this.svgEl, this.title, this.options.strokeColor);
-    if (this.xLabel) addLabels.xLabel(this.svgEl, this.xLabel, this.options.strokeColor);
-    if (this.yLabel) addLabels.yLabel(this.svgEl, this.yLabel, this.options.strokeColor);
-
-    const tooltip = new Tooltip({
-      parent: this.svgEl,
-      title: '',
-      items: [{ color: 'red', text: 'weweyang' }, { color: 'blue', text: 'timqian' }],
-      position: { x: 60, y: 60, type: config.positionType.dowfnRight },
-      unxkcdify: this.options.unxkcdify,
-      strokeColor: this.options.strokeColor,
-      backgroundColor: this.options.backgroundColor,
-    });
+    const tooltip = createTooltip(this.svgEl, this.options);
 
     if (this.options.timeFormat) {
       this.data.datasets.forEach((dataset) => {
@@ -127,10 +80,9 @@ class Scatter {
     const graphPart = this.chart.append('g')
       .attr('pointer-events', 'all');
 
-    // axis
     addAxis.xAxis(graphPart, {
       xScale,
-      tickCount: this.options.xTickCount === undefined ? 3 : this.options.xTickCount,
+      tickCount: this.options.xTickCount,
       moveDown: this.height,
       fontFamily: this.fontFamily,
       unxkcdify: this.options.unxkcdify,
@@ -138,7 +90,7 @@ class Scatter {
     });
     addAxis.yAxis(graphPart, {
       yScale,
-      tickCount: this.options.yTickCount === undefined ? 3 : this.options.yTickCount,
+      tickCount: this.options.yTickCount,
       fontFamily: this.fontFamily,
       unxkcdify: this.options.unxkcdify,
       stroke: this.options.strokeColor,
@@ -158,13 +110,13 @@ class Scatter {
         .attr('class', 'xkcd-chart-xyline')
         .attr('d', (d) => theLine(d.data))
         .attr('fill', 'none')
-        .attr('stroke', (d, i) => (this.options.dataColors[i]))
+        .attr('stroke', (d, i) => this.options.dataColors[i])
         .attr('filter', this.filter);
     }
 
     // dots
-    const dotInitSize = 3.5 * (this.options.dotSize === undefined ? 1 : this.options.dotSize);
-    const dotHoverSize = 6 * (this.options.dotSize === undefined ? 1 : this.options.dotSize);
+    const dotInitSize = config.dotInitRadius * (this.options.dotSize || 1);
+    const dotHoverSize = config.dotHoverRadius * (this.options.dotSize || 1);
     graphPart.selectAll('.xkcd-chart-xycircle-group')
       .data(this.data.datasets)
       .enter()
@@ -177,8 +129,6 @@ class Scatter {
       .enter()
       .append('circle')
       .style('stroke', (d, i, nodes) => {
-        // FIXME: here I want to pass xyGroupIndex down to the circles by reading parent attrs
-        // It might have perfomance issue with a large dataset, not sure there are better ways
         const xyGroupIndex = Number(select(nodes[i].parentElement).attr('xy-group-index'));
         return this.options.dataColors[xyGroupIndex];
       })
@@ -204,21 +154,13 @@ class Scatter {
       })
       .on('mouseover', (d, i, nodes) => {
         const xyGroupIndex = Number(select(nodes[i].parentElement).attr('xy-group-index'));
-        select(nodes[i])
-          .attr('r', dotHoverSize);
-
-        const tipX = xScale(d.x) + margin.left + 5;
-        const tipY = yScale(d.y) + margin.top + 5;
-        let tooltipPositionType = config.positionType.downRight;
-        if (tipX > this.width / 2 && tipY < this.height / 2) {
-          tooltipPositionType = config.positionType.downLeft;
-        } else if (tipX > this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upLeft;
-        } else if (tipX < this.width / 2 && tipY > this.height / 2) {
-          tooltipPositionType = config.positionType.upRight;
-        }
+        select(nodes[i]).attr('r', dotHoverSize);
+        const tipX = xScale(d.x) + this.margin.left + config.scatterMouseOffset;
+        const tipY = yScale(d.y) + this.margin.top + config.scatterMouseOffset;
         tooltip.update({
-          title: this.options.timeFormat ? dayjs(this.data.datasets[xyGroupIndex].data[i].x).format(this.options.timeFormat) : `${this.data.datasets[xyGroupIndex].data[i].x}`,
+          title: this.options.timeFormat
+            ? dayjs(this.data.datasets[xyGroupIndex].data[i].x).format(this.options.timeFormat)
+            : `${this.data.datasets[xyGroupIndex].data[i].x}`,
           items: [{
             color: this.options.dataColors[xyGroupIndex],
             text: `${this.data.datasets[xyGroupIndex].label || ''}: ${d.y}`,
@@ -226,15 +168,13 @@ class Scatter {
           position: {
             x: tipX,
             y: tipY,
-            type: tooltipPositionType,
+            type: tooltipPositionType(tipX, tipY, this.width, this.height),
           },
         });
         tooltip.show();
       })
       .on('mouseout', (d, i, nodes) => {
-        select(nodes[i])
-          .attr('r', dotInitSize);
-
+        select(nodes[i]).attr('r', dotInitSize);
         tooltip.hide();
       });
 
@@ -249,7 +189,6 @@ class Scatter {
         .attr('stroke-dasharray', '4,4')
         .style('visibility', 'hidden');
 
-      // Invisible overlay behind dots to capture drag events on empty space
       graphPart.insert('rect', ':first-child')
         .attr('class', 'xkcd-chart-drag-overlay')
         .attr('width', this.width)
@@ -301,8 +240,8 @@ class Scatter {
           dragStart = null;
           selRect.style('visibility', 'hidden');
 
-          // Only treat as box select if dragged more than 4px
-          if (x1 - x0 < 4 && y1 - y0 < 4) return;
+          if (x1 - x0 < config.boxSelectMinDrag
+            && y1 - y0 < config.boxSelectMinDrag) return;
 
           const dataX0 = xScale.invert(x0);
           const dataX1 = xScale.invert(x1);

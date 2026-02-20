@@ -5,7 +5,7 @@ See [this repository](https://github.com/timqian/chart.xkcd) for the original co
 
 ### Setup
 
-Install Python dependencies (requires Python 3.13+):
+Install Python dependencies (requires Python 3.12+):
 
 ```
 uv pip install -e ".[dev]"

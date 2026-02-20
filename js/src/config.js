@@ -1,3 +1,8 @@
+/**
+ * Shared configuration constants for all chart types.
+ * Centralizes magic numbers and default values so they can be
+ * changed in one place rather than across every chart file.
+ */
 const config = {
   positionType: {
     upLeft: 1,

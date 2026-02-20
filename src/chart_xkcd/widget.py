@@ -10,7 +10,20 @@ _WIDGET_JS = files("chart_xkcd").joinpath("static", "chart.xkcd.js")
 
 
 class ChartWidget(anywidget.AnyWidget):
-    """anywidget wrapper around chart.xkcd."""
+    """anywidget wrapper around chart.xkcd.
+
+    Displays an xkcd-style chart inside a Jupyter or marimo notebook.
+    For marimo reactivity, wrap with ``mo.ui.anywidget(widget)``.
+
+    Traitlets (synced with the JS front-end):
+        config: JSON string of chart configuration (title, data, options).
+        chart_type: Name of the JS chart class (Bar, Line, Pie, etc.).
+        width: Container width in pixels.
+        height: Container height in pixels.
+        selection: JSON array of currently selected items. Updated by
+            click, shift-click, and box-select interactions on the
+            front-end.
+    """
 
     _esm = _WIDGET_JS
     config = traitlets.Unicode("{}").tag(sync=True)

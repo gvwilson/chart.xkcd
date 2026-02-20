@@ -12,6 +12,27 @@ import {
   createSvgEl, setupChartGroup, createTooltip,
 } from './utils/initChart';
 
+/**
+ * Scatter (XY) chart with optional connecting lines.
+ *
+ * Each dataset contains an array of `{x, y}` points. Dots grow
+ * on hover to show a tooltip. Supports time-formatted x-values
+ * (via the `timeFormat` option and dayjs), click/shift-click
+ * selection, and drag-to-select (box selection) that reports all
+ * enclosed points.
+ *
+ * @param {SVGElement} svg - Target SVG element.
+ * @param {Object} params
+ * @param {string} [params.title] - Chart title.
+ * @param {string} [params.xLabel] - X-axis label.
+ * @param {string} [params.yLabel] - Y-axis label.
+ * @param {Object} params.data
+ * @param {Object[]} params.data.datasets - Array of dataset objects, each with
+ *   `data` ({x,y}[]), optional `label`, and optional `color`.
+ * @param {Object} [params.options] - Includes `dotSize`, `showLine`,
+ *   `timeFormat`, `xTickCount`, `yTickCount`, `showLegend`,
+ *   `legendPosition`, and all common options from `applyDefaults`.
+ */
 class Scatter {
   constructor(svg, {
     title, xLabel, yLabel, data: { datasets }, options,

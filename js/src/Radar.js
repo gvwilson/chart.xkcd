@@ -10,7 +10,29 @@ import {
   createSvgEl, setupChartGroupSimple, createTooltip,
 } from './utils/initChart';
 
+/** Rotate the radar so the first axis points straight up. */
 const angleOffset = -Math.PI / 2;
+
+/**
+ * Radar (spider/web) chart.
+ *
+ * Renders multiple datasets as filled polygons on a radial grid.
+ * Each vertex corresponds to one label and its distance from the
+ * center is proportional to the data value. Dots on vertices
+ * grow on hover to show a tooltip with all dataset values.
+ * Supports click/shift-click selection and an optional legend.
+ *
+ * @param {SVGElement} svg - Target SVG element.
+ * @param {Object} params
+ * @param {string} [params.title] - Chart title.
+ * @param {Object} params.data
+ * @param {string[]} params.data.labels - Axis labels (one per direction).
+ * @param {Object[]} params.data.datasets - Array of dataset objects, each with
+ *   `data` (number[]), optional `label`, and optional `color`.
+ * @param {Object} [params.options] - Includes `showLabels`, `ticksCount`,
+ *   `dotSize`, `showLegend`, `legendPosition`, and all common
+ *   options from `applyDefaults`.
+ */
 
 class Radar {
   constructor(svg, {

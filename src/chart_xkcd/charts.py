@@ -2,7 +2,11 @@
 
 
 class _BaseChart:
-    """Base class for all chart types."""
+    """Base class for all chart types.
+
+    Subclasses (Bar, Pie, Radar, etc.) set ``self.data`` to the
+    appropriate shape and optionally accept ``options``.
+    """
 
     def __init__(self, *, title=None, data, options=None):
         self.title = title
@@ -10,6 +14,11 @@ class _BaseChart:
         self.options = options
 
     def to_dict(self):
+        """Serialize the chart to a dict suitable for JSON encoding.
+
+        The returned dict is passed to the JS chart constructor and
+        must match the shape expected by the corresponding JS class.
+        """
         config = {}
         if self.title is not None:
             config["title"] = self.title
@@ -20,7 +29,10 @@ class _BaseChart:
 
 
 class _AxisChart(_BaseChart):
-    """Base class for charts with x/y axis labels."""
+    """Base class for charts with x/y axis labels (Bar, StackedBar, Line, Scatter).
+
+    Adds ``xLabel`` and ``yLabel`` keys to the serialized dict when present.
+    """
 
     def __init__(self, *, title=None, x_label=None, y_label=None, data, options=None):
         super().__init__(title=title, data=data, options=options)
@@ -28,6 +40,7 @@ class _AxisChart(_BaseChart):
         self.y_label = y_label
 
     def to_dict(self):
+        """Serialize the chart, including axis labels."""
         config = super().to_dict()
         if self.x_label is not None:
             config["xLabel"] = self.x_label

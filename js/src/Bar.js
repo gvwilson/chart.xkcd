@@ -9,6 +9,24 @@ import {
   createSvgEl, setupChartGroup, createTooltip,
 } from './utils/initChart';
 
+/**
+ * Simple bar chart with one dataset.
+ *
+ * Renders vertical bars with an xkcd hand-drawn style filter.
+ * Supports hover tooltips, click selection, and shift-click
+ * multi-selection.
+ *
+ * @param {SVGElement} svg - Target SVG element (usually inside a sized container).
+ * @param {Object} params
+ * @param {string} [params.title] - Chart title displayed above the plot.
+ * @param {string} [params.xLabel] - Label for the x-axis.
+ * @param {string} [params.yLabel] - Label for the y-axis.
+ * @param {Object} params.data
+ * @param {string[]} params.data.labels - Category labels for the x-axis.
+ * @param {Object[]} params.data.datasets - Array with a single dataset object
+ *   containing a `data` array of numeric values and an optional `label`.
+ * @param {Object} [params.options] - See `applyDefaults` for common options.
+ */
 class Bar {
   constructor(svg, {
     title, xLabel, yLabel, data: { labels, datasets }, options,

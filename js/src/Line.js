@@ -11,6 +11,26 @@ import {
   createSvgEl, setupChartGroup, createTooltip,
 } from './utils/initChart';
 
+/**
+ * Line chart with smooth (monotone-X) interpolation.
+ *
+ * Supports multiple datasets rendered as separate colored lines.
+ * A vertical hover line snaps to the nearest label and shows
+ * a tooltip with values from all datasets at that point.
+ * Includes click/shift-click selection and an optional legend.
+ *
+ * @param {SVGElement} svg - Target SVG element.
+ * @param {Object} params
+ * @param {string} [params.title] - Chart title.
+ * @param {string} [params.xLabel] - X-axis label.
+ * @param {string} [params.yLabel] - Y-axis label.
+ * @param {Object} params.data
+ * @param {string[]} params.data.labels - Labels for each point along the x-axis.
+ * @param {Object[]} params.data.datasets - Array of dataset objects, each with
+ *   `data` (number[]), optional `label`, and optional `color`.
+ * @param {Object} [params.options] - Includes `showLegend`, `legendPosition`,
+ *   and all common options from `applyDefaults`.
+ */
 class Line {
   constructor(svg, {
     title, xLabel, yLabel, data: { labels, datasets }, options,

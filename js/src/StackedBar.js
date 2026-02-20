@@ -10,6 +10,25 @@ import {
   createSvgEl, setupChartGroup, createTooltip,
 } from './utils/initChart';
 
+/**
+ * Stacked bar chart supporting multiple datasets.
+ *
+ * Each dataset's bars are stacked on top of the previous one.
+ * Includes a legend, hover tooltips showing all dataset values
+ * for the hovered category, and click/shift-click selection.
+ *
+ * @param {SVGElement} svg - Target SVG element.
+ * @param {Object} params
+ * @param {string} [params.title] - Chart title.
+ * @param {string} [params.xLabel] - X-axis label.
+ * @param {string} [params.yLabel] - Y-axis label.
+ * @param {Object} params.data
+ * @param {string[]} params.data.labels - Category labels for the x-axis.
+ * @param {Object[]} params.data.datasets - Array of dataset objects, each with
+ *   `data` (number[]), optional `label`, and optional `color`.
+ * @param {Object} [params.options] - Includes `showLegend`, `legendPosition`,
+ *   and all common options from `applyDefaults`.
+ */
 class StackedBar {
   constructor(svg, {
     title, xLabel, yLabel, data: { labels, datasets }, options,

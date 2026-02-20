@@ -1,3 +1,7 @@
+/**
+ * Library entry point for standalone (non-widget) usage.
+ * Re-exports all chart classes and the shared config object.
+ */
 import Bar from './Bar';
 import Line from './Line';
 import Pie from './Pie';

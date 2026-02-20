@@ -9,6 +9,24 @@ import {
   createSvgEl, setupChartGroupSimple, createTooltip,
 } from './utils/initChart';
 
+/**
+ * Pie / donut chart.
+ *
+ * Renders a single dataset as arc segments. The `innerRadius`
+ * option (0..1) controls the donut hole size; set to 0 for a
+ * solid pie. Segments dim on hover and show a tooltip.
+ * Supports click/shift-click selection and an optional legend.
+ *
+ * @param {SVGElement} svg - Target SVG element.
+ * @param {Object} params
+ * @param {string} [params.title] - Chart title.
+ * @param {Object} params.data
+ * @param {string[]} params.data.labels - Slice labels.
+ * @param {Object[]} params.data.datasets - Array with a single dataset
+ *   containing `data` (number[]) and optional `label`.
+ * @param {Object} [params.options] - Includes `innerRadius`, `showLegend`,
+ *   `legendPosition`, and all common options from `applyDefaults`.
+ */
 class Pie {
   constructor(svg, {
     title, data: { labels, datasets }, options,

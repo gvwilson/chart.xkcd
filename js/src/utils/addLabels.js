@@ -1,5 +1,15 @@
+/**
+ * Chart label helpers for title, x-axis label, and y-axis label.
+ */
 import config from '../config';
 
+/**
+ * Render a centered title at the top of the SVG.
+ *
+ * @param {d3.Selection} parent - Root SVG selection.
+ * @param {string} text - Title text.
+ * @param {string} fill - Text fill color.
+ */
 const title = (parent, text, fill) => {
   parent
     .append('text')
@@ -12,6 +22,13 @@ const title = (parent, text, fill) => {
     .text(text);
 };
 
+/**
+ * Render a centered x-axis label at the bottom of the SVG.
+ *
+ * @param {d3.Selection} parent - Root SVG selection.
+ * @param {string} text - Label text.
+ * @param {string} fill - Text fill color.
+ */
 const xLabel = (parent, text, fill) => {
   parent
     .append('text')
@@ -23,6 +40,14 @@ const xLabel = (parent, text, fill) => {
     .text(text);
 };
 
+/**
+ * Render a rotated y-axis label along the left edge of the SVG,
+ * vertically centered.
+ *
+ * @param {d3.Selection} parent - Root SVG selection.
+ * @param {string} text - Label text.
+ * @param {string} fill - Text fill color.
+ */
 const yLabel = (parent, text, fill) => {
   parent
     .append('text')

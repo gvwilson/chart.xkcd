@@ -1,3 +1,9 @@
+/**
+ * Append feTurbulence + feDisplacementMap primitives to an SVG
+ * filter element, producing the hand-drawn "wobble" effect.
+ *
+ * @param {d3.Selection} filter - d3 selection of an <filter> element.
+ */
 function addXkcdNoise(filter) {
   filter
     .call((f) => f.append('feTurbulence')
@@ -12,6 +18,18 @@ function addXkcdNoise(filter) {
       .attr('in2', 'noise'));
 }
 
+/**
+ * Add two SVG filter definitions to the parent element:
+ *
+ * - `#xkcdify` — used by axes, bars, lines, and dots. Uses
+ *   `userSpaceOnUse` filter units with a small negative offset
+ *   so strokes at the edges are not clipped.
+ * - `#xkcdify-pie` — used by pie and radar charts. Uses the
+ *   default `objectBoundingBox` filter units which work better
+ *   for circular/radial shapes.
+ *
+ * @param {d3.Selection} parent - d3 selection of the root SVG element.
+ */
 export default function addFilter(parent) {
   addXkcdNoise(
     parent.append('filter')

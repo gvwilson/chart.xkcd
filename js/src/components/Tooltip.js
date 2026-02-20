@@ -1,5 +1,16 @@
 import config from '../config';
 
+/**
+ * Determine which corner quadrant the tooltip should open toward
+ * based on the cursor position within the chart area, so the
+ * tooltip doesn't overflow the visible chart bounds.
+ *
+ * @param {number} tipX - Cursor x position in SVG coordinates.
+ * @param {number} tipY - Cursor y position in SVG coordinates.
+ * @param {number} width - Chart area width.
+ * @param {number} height - Chart area height.
+ * @returns {number} One of `config.positionType.*`.
+ */
 export function tooltipPositionType(tipX, tipY, width, height) {
   if (tipX > width / 2 && tipY < height / 2) {
     return config.positionType.downLeft;
@@ -11,6 +22,22 @@ export function tooltipPositionType(tipX, tipY, width, height) {
   return config.positionType.downRight;
 }
 
+/**
+ * Floating tooltip displayed on hover over chart elements.
+ *
+ * Consists of a title, a list of colored items (swatch + text),
+ * and a semi-transparent rounded-rect background. Position and
+ * content are updated dynamically via `update()`.
+ *
+ * @param {Object} opts
+ * @param {d3.Selection} opts.parent - SVG element to append the tooltip into.
+ * @param {string} opts.title - Initial title text.
+ * @param {Array<{color: string, text: string}>} opts.items - Data items.
+ * @param {Object} opts.position - `{x, y, type}` where type is a positionType.
+ * @param {boolean} opts.unxkcdify - Skip the hand-drawn filter.
+ * @param {string} opts.backgroundColor - Tooltip background fill.
+ * @param {string} opts.strokeColor - Border and text color.
+ */
 class Tooltip {
   constructor({
     parent, title, items, position, unxkcdify, backgroundColor, strokeColor,

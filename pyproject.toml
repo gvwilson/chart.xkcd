@@ -1,13 +1,19 @@
 [project]
 name = "chart-xkcd"
-version = "0.4.0"
 description = "Python API for generating XKCD-style charts"
+keywords = ["charts"]
+version = "0.4.1"
+readme = "README.md"
 license = "MIT"
 requires-python = ">=3.13"
 dependencies = [
     "anywidget>=0.9.0",
     "marimo>=0.19.11",
 ]
+
+[project.urls]
+Repository = "https://github.com/gvwilson/chart.xkcd"
+Documentation = "https://chartxkcd.readthedocs.io"
 
 [project.scripts]
 chart_xkcd = "chart_xkcd.main:main"
@@ -74,6 +80,11 @@ do
 done
 """}
 docs = {help = "build documentation", cmd = """
+mkdir -p pages &&
+cp README.md pages/index.md &&
+cp LICENSE.md pages/license.md &&
+cp CODE_OF_CONDUCT.md pages/conduct.md &&
+cp CONTRIBUTING.md pages/contributing.md &&
 mkdocs build &&
 touch docs/.nojekyll &&
 cp docs-requirements.txt docs/requirements.txt

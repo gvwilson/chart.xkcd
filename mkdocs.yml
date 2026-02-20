@@ -1,12 +1,26 @@
-site_name: asimpy
+site_name: "chart.xkcd Documentation"
 docs_dir: pages
 site_dir: docs
 
 theme:
   name: material
 
+nav:
+- Home: index.md
+- Software:
+  - bar.md
+  - line.md
+  - pie.md
+  - radar.md
+  - renderer.md
+  - scatter.md
+  - stacked_bar.md
+- Project:
+  - license.md
+  - conduct.md
+  - contributing.md
+
 plugins:
-- awesome-pages
 - mkdocstrings:
     handlers:
       python:
@@ -14,8 +28,6 @@ plugins:
           - src
 
 markdown_extensions:
-- markdown_include.include:
-    base_path: docs
 - pymdownx.highlight
 - pymdownx.superfences
 

@@ -123,6 +123,7 @@ class Pie {
         parentHeight: this.height,
         strokeColor: this.options.strokeColor,
         backgroundColor: this.options.backgroundColor,
+        legendScale: this.options.legendScale,
       });
     }
   }

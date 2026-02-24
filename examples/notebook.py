@@ -35,16 +35,17 @@ def _(
     stacked_bar_chart,
     to_widget,
 ):
+    _small = {"width": 300, "height": 200, "extra_options": {"legendScale": 50}}
     mo.vstack([
         mo.hstack([
-            to_widget(bar_chart, width=300, height=200),
-            to_widget(stacked_bar_chart, width=300, height=200),
-            to_widget(line_chart, width=300, height=200),
+            to_widget(bar_chart, **_small),
+            to_widget(stacked_bar_chart, **_small),
+            to_widget(line_chart, **_small),
         ]),
         mo.hstack([
-            to_widget(scatter_chart, width=300, height=200),
-            to_widget(pie_chart, width=300, height=200),
-            to_widget(radar_chart, width=300, height=200),
+            to_widget(scatter_chart, **_small),
+            to_widget(pie_chart, **_small),
+            to_widget(radar_chart, **_small),
         ]),
     ])
     return

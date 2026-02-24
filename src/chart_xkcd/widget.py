@@ -33,19 +33,24 @@ class ChartWidget(anywidget.AnyWidget):
     selection = traitlets.Unicode("[]").tag(sync=True)
 
 
-def to_widget(chart, width=600, height=400):
+def to_widget(chart, width=600, height=400, extra_options=None):
     """Convert a chart object to an anywidget for display in marimo or Jupyter.
 
     Args:
         chart: a chart object (Bar, Line, Pie, etc.).
         width: chart width in pixels.
         height: chart height in pixels.
+        extra_options: optional dict of additional options merged on top
+            of the chart's own options. Does not modify the original chart.
 
     Returns:
         A ChartWidget instance.
     """
+    d = chart.to_dict()
+    if extra_options:
+        d["options"] = {**(d.get("options") or {}), **extra_options}
     return ChartWidget(
-        config=json.dumps(chart.to_dict()),
+        config=json.dumps(d),
         chart_type=type(chart).__name__,
         width=width,
         height=height,

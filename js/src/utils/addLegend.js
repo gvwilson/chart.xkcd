@@ -18,41 +18,46 @@ import config from '../config';
  * @param {number} opts.parentHeight - Height of the containing chart area.
  * @param {string} opts.strokeColor - Stroke color for the background border.
  * @param {string} opts.backgroundColor - Fill color for the background.
+ * @param {number} [opts.legendScale=100] - Scale the legend to this
+ *   percentage of its default size (1-100). Affects text, swatches,
+ *   spacing, and background proportionally.
  */
 export default function addLegend(parent, {
   items, position, unxkcdify, parentWidth, parentHeight, strokeColor, backgroundColor,
+  legendScale,
 }) {
   const filter = !unxkcdify ? config.filterUrl : null;
+  const s = (legendScale || 100) / 100;
 
   const legend = parent.append('svg');
   const backgroundLayer = legend.append('svg');
   const textLayer = legend.append('svg');
 
   items.forEach((item, i) => {
-    const itemY = 17 + config.itemRowHeight * i;
+    const itemY = 17 * s + config.itemRowHeight * s * i;
 
     textLayer.append('rect')
       .style('fill', item.color)
-      .attr('width', config.swatchSize)
-      .attr('height', config.swatchSize)
+      .attr('width', config.swatchSize * s)
+      .attr('height', config.swatchSize * s)
       .attr('filter', filter)
-      .attr('rx', config.swatchCornerRadius)
-      .attr('ry', config.swatchCornerRadius)
-      .attr('x', config.itemXOffset)
+      .attr('rx', config.swatchCornerRadius * s)
+      .attr('ry', config.swatchCornerRadius * s)
+      .attr('x', config.itemXOffset * s)
       .attr('y', itemY);
 
     textLayer.append('text')
-      .style('font-size', config.tooltipFontSize)
+      .style('font-size', config.tooltipFontSize * s)
       .style('fill', strokeColor)
-      .attr('x', config.itemXOffset + config.itemTextOffset)
-      .attr('y', itemY + config.swatchSize)
+      .attr('x', (config.itemXOffset + config.itemTextOffset) * s)
+      .attr('y', itemY + config.swatchSize * s)
       .text(item.text);
   });
 
   setTimeout(() => {
     const bbox = textLayer.node().getBBox();
-    const backgroundWidth = bbox.width + config.itemXOffset;
-    const backgroundHeight = bbox.height + 10;
+    const backgroundWidth = bbox.width + config.itemXOffset * s;
+    const backgroundHeight = bbox.height + 10 * s;
 
     let legendX = 0;
     let legendY = 0;
@@ -74,13 +79,13 @@ export default function addLegend(parent, {
       .attr('filter', filter)
       .attr('fill-opacity', config.legendBackgroundOpacity)
       .attr('stroke', strokeColor)
-      .attr('stroke-width', config.backgroundStrokeWidth)
+      .attr('stroke-width', config.backgroundStrokeWidth * s)
       .attr('width', backgroundWidth)
       .attr('height', backgroundHeight)
-      .attr('rx', config.backgroundCornerRadius)
-      .attr('ry', config.backgroundCornerRadius)
-      .attr('x', 8)
-      .attr('y', 5);
+      .attr('rx', config.backgroundCornerRadius * s)
+      .attr('ry', config.backgroundCornerRadius * s)
+      .attr('x', 8 * s)
+      .attr('y', 5 * s);
 
     legend
       .attr('x', legendX)

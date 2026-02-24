@@ -224,6 +224,7 @@ class Radar {
         parentHeight: this.height,
         backgroundColor: this.options.backgroundColor,
         strokeColor: this.options.strokeColor,
+        legendScale: this.options.legendScale,
       });
     }
   }

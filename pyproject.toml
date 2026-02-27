@@ -42,7 +42,6 @@ dev = [
     "mkdocs-material>=9.7.1",
     "mkdocstrings[python]>=1.0.0",
     "ruff>=0.14.10",
-    "snailz>=5.5.1",
     "taskipy>=1.14.1",
     "twine>=6.2.0",
 ]
@@ -70,15 +69,6 @@ find . -path './.venv' -prune -o -type d -name '.ruff_cache' -exec rm -rf {} + &
 find . -path './.venv' -prune -o -type d -name '__pycache__' -exec rm -rf {} + &&
 find . -path './.venv' -prune -o -type f -name '*~' -exec rm {} +
 """}
-data = {help = "regenerate example data", cmd = """
-snailz --outdir data --params examples/snailz.json &&
-mkdir -p ./tmp &&
-for file in examples/*.sql
-do
-    name=$(basename "$file" .sql)
-    sqlite3 data/snailz.db < "$file" > "tmp/$name.csv"
-done
-"""}
 docs = {help = "build documentation", cmd = """
 mkdir -p pages &&
 cp README.md pages/index.md &&
@@ -95,7 +85,7 @@ mkdir -p tmp &&
 for file in examples/*.py
 do
     name=$(basename "$file" .py)
-    python "$file" "tmp/$name.csv" "tmp/$name.html"
+    python "$file" "data/$name.csv" "tmp/$name.html"
 done
 """}
 fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}

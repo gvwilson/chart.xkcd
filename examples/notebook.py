@@ -53,7 +53,7 @@ def _(
 
 @app.cell
 def _(Bar, csv):
-    with open("tmp/bar.csv") as _f:
+    with open("data/bar.csv") as _f:
         _rows = list(csv.DictReader(_f))
 
     bar_chart = Bar(
@@ -74,7 +74,7 @@ def _(bar_chart, to_widget):
 
 @app.cell
 def _(StackedBar, csv):
-    with open("tmp/stacked_bar.csv") as _f:
+    with open("data/stacked_bar.csv") as _f:
         _rows = list(csv.DictReader(_f))
 
     _grids = sorted(set(r["grid"] for r in _rows))
@@ -103,7 +103,7 @@ def _(stacked_bar_chart, to_widget):
 
 @app.cell
 def _(Line, csv):
-    with open("tmp/line.csv") as _f:
+    with open("data/line.csv") as _f:
         _rows = list(csv.DictReader(_f))
 
     line_chart = Line(
@@ -124,7 +124,7 @@ def _(line_chart, to_widget):
 
 @app.cell
 def _(Scatter, csv, positionType):
-    with open("tmp/scatter.csv") as _f:
+    with open("data/scatter.csv") as _f:
         _rows = list(csv.DictReader(_f))
 
     _varieties = sorted(set(r["variety"] for r in _rows))
@@ -160,7 +160,7 @@ def _(scatter_chart, to_widget):
 
 @app.cell
 def _(Pie, csv, positionType):
-    with open("tmp/pie.csv") as _f:
+    with open("data/pie.csv") as _f:
         _rows = list(csv.DictReader(_f))
 
     pie_chart = Pie(
@@ -183,7 +183,7 @@ def _(pie_chart, to_widget):
 
 @app.cell
 def _(Radar, csv, positionType):
-    with open("tmp/radar.csv") as _f:
+    with open("data/radar.csv") as _f:
         _rows = list(csv.DictReader(_f))
 
     _grids = sorted(set(r["grid"] for r in _rows))

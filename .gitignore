@@ -21,6 +21,4 @@ examples/*.html
 # Miscellaneous
 *~
 .DS_Store
-data/
-tmp/*.csv
 tmp/*.html

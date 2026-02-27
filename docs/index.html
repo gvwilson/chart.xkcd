@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -245,12 +245,7 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#marimo-notebook-examplesnotebookpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -260,8 +255,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#selection-test-notebook-examplestest_selectionpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -271,8 +266,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#javascript-examples-jsexamples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -280,6 +275,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -748,12 +748,7 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
+          <li class="md-nav__item">
   <a href="#marimo-notebook-examplesnotebookpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -763,8 +758,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#selection-test-notebook-examplestest_selectionpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -774,8 +769,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#javascript-examples-jsexamples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -783,6 +778,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -817,6 +817,10 @@
   <h1>Home</h1>
 
 <h2 id="chartxkcd">chart.xkcd</h2>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/gvwilson/chart.xkcd/refs/heads/main/pages/img/gallery.png" alt="gallery">
+</div>
+
 <p>A Python + JavaScript library for creating xkcd-style charts.
 See <a href="https://github.com/timqian/chart.xkcd">this repository</a> for the original code.</p>
 <h2 id="examples">Examples</h2>
@@ -877,19 +881,19 @@ writes a static HTML page:</p>
 <p>Or run one individually:</p>
 <div class="highlight"><pre><span></span><code>python examples/bar.py tmp/bar.csv tmp/bar.html
 </code></pre></div>
-<h2 id="marimo-notebook-examplesnotebookpy">Marimo notebook (<code>examples/notebook.py</code>)</h2>
+<h3 id="marimo-notebook-examplesnotebookpy">Marimo notebook (<code>examples/notebook.py</code>)</h3>
 <p>A marimo notebook that displays all six chart types as interactive
 widgets. Each cell reads a CSV file from <code>tmp/</code> and calls <code>to_widget()</code>
 to render the chart.</p>
 <div class="highlight"><pre><span></span><code>marimo run examples/notebook.py
 </code></pre></div>
-<h2 id="selection-test-notebook-examplestest_selectionpy">Selection test notebook (<code>examples/test_selection.py</code>)</h2>
+<h3 id="selection-test-notebook-examplestest_selectionpy">Selection test notebook (<code>examples/test_selection.py</code>)</h3>
 <p>A marimo notebook demonstrating click, shift-click, and box-select
 interactions. Each chart is wrapped with <code>mo.ui.anywidget()</code> so that
 selection changes trigger reactive cell updates.</p>
 <div class="highlight"><pre><span></span><code>marimo run examples/test_selection.py
 </code></pre></div>
-<h2 id="javascript-examples-jsexamples">JavaScript examples (<code>js/examples/</code>)</h2>
+<h3 id="javascript-examples-jsexamples">JavaScript examples (<code>js/examples/</code>)</h3>
 <p>A standalone HTML page (<code>example.html</code>) that renders all six chart
 types using the JavaScript library directly. The data is loaded
 dynamically from CSV files via <code>fetch()</code>. A symlink

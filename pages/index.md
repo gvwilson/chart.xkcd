@@ -1,5 +1,9 @@
 ## chart.xkcd
 
+<div align="center">
+  <img src="https://raw.githubusercontent.com/gvwilson/chart.xkcd/refs/heads/main/pages/img/gallery.png" alt="gallery">
+</div>
+
 A Python + JavaScript library for creating xkcd-style charts.
 See [this repository](https://github.com/timqian/chart.xkcd) for the original code.
 
@@ -31,7 +35,7 @@ Or run one individually:
 python examples/bar.py tmp/bar.csv tmp/bar.html
 ```
 
-## Marimo notebook (`examples/notebook.py`)
+### Marimo notebook (`examples/notebook.py`)
 
 A marimo notebook that displays all six chart types as interactive
 widgets. Each cell reads a CSV file from `tmp/` and calls `to_widget()`
@@ -41,7 +45,7 @@ to render the chart.
 marimo run examples/notebook.py
 ```
 
-## Selection test notebook (`examples/test_selection.py`)
+### Selection test notebook (`examples/test_selection.py`)
 
 A marimo notebook demonstrating click, shift-click, and box-select
 interactions. Each chart is wrapped with `mo.ui.anywidget()` so that
@@ -51,7 +55,7 @@ selection changes trigger reactive cell updates.
 marimo run examples/test_selection.py
 ```
 
-## JavaScript examples (`js/examples/`)
+### JavaScript examples (`js/examples/`)
 
 A standalone HTML page (`example.html`) that renders all six chart
 types using the JavaScript library directly. The data is loaded

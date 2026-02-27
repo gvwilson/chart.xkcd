@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -547,6 +547,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -563,6 +581,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -596,6 +655,36 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -612,6 +701,72 @@
 
 
 <h1 id="contributing">Contributing</h1>
+<p>Contributions are very welcome.
+Please file issues or submit pull requests in our <a href="https://github.com/gvwilson/chart.xkcd">GitHub repository</a>.
+All contributors will be acknowledged,
+but must abide by our Code of Conduct.</p>
+<h2 id="setup">Setup</h2>
+<ul>
+<li><code>uv venv</code> (once)</li>
+<li><code>source .venv/bin/activate</code></li>
+<li><code>uv sync --extra dev</code></li>
+<li><code>cd js</code></li>
+<li><code>npm install</code></li>
+</ul>
+<h2 id="operations">Operations</h2>
+<p><code>task --list</code> displays a list of actions:</p>
+<table>
+<thead>
+<tr>
+<th>action</th>
+<th>effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>build</td>
+<td>build package</td>
+</tr>
+<tr>
+<td>lint</td>
+<td>check code issues</td>
+</tr>
+<tr>
+<td>clean</td>
+<td>clean up</td>
+</tr>
+<tr>
+<td>docs</td>
+<td>build documentation</td>
+</tr>
+<tr>
+<td>ex_js</td>
+<td>run server to view JS examples</td>
+</tr>
+<tr>
+<td>ex_py</td>
+<td>re-create HTML files using Python</td>
+</tr>
+<tr>
+<td>fix</td>
+<td>fix Python code issues</td>
+</tr>
+<tr>
+<td>format</td>
+<td>format Python code</td>
+</tr>
+<tr>
+<td>publish</td>
+<td>publish using ~/.pypirc credentials</td>
+</tr>
+<tr>
+<td>serve</td>
+<td>run local server for previewing examples</td>
+</tr>
+</tbody>
+</table>
+<p>You may also use <code>marimo run examples/notebook.py</code>
+to view a <a href="https://marimo.io/">Marimo notebook</a> of examples.</p>
 
 
 

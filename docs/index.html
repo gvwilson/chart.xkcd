@@ -17,7 +17,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -220,43 +220,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="chart.xkcd">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setup
-      
-    </span>
-  </a>
-  
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#generating-example-data" class="md-nav__link">
-    <span class="md-ellipsis">
       
-        Generating example data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#building" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -279,7 +245,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#marimo-notebook-examplesnotebookpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -289,8 +260,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#selection-test-notebook-examplestest_selectionpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -300,8 +271,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#javascript-examples-jsexamples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -311,13 +282,8 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#project-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -325,11 +291,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -762,43 +723,9 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="chart.xkcd">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setup
-      
-    </span>
-  </a>
-  
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#generating-example-data" class="md-nav__link">
-    <span class="md-ellipsis">
       
-        Generating example data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#building" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Building
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -821,7 +748,12 @@
   
 </li>
         
-          <li class="md-nav__item">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#marimo-notebook-examplesnotebookpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -831,8 +763,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#selection-test-notebook-examplestest_selectionpy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -842,8 +774,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#javascript-examples-jsexamples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -853,13 +785,8 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#project-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -867,11 +794,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -897,33 +819,8 @@
 <h2 id="chartxkcd">chart.xkcd</h2>
 <p>A Python + JavaScript library for creating xkcd-style charts.
 See <a href="https://github.com/timqian/chart.xkcd">this repository</a> for the original code.</p>
-<h3 id="setup">Setup</h3>
-<p>Install Python dependencies (requires Python 3.12+):</p>
-<div class="highlight"><pre><span></span><code>uv pip install -e &quot;.[dev]&quot;
-</code></pre></div>
-<p>Install JavaScript dependencies:</p>
-<div class="highlight"><pre><span></span><code>cd js &amp;&amp; npm install &amp;&amp; cd -
-</code></pre></div>
-<h3 id="generating-example-data">Generating example data</h3>
-<p>The examples use data from <a href="https://pypi.org/project/snailz/">snailz</a>,
-a synthetic data generator. The configuration is in <code>examples/snailz.json</code>.
-To regenerate the SQLite database and CSV files:</p>
-<div class="highlight"><pre><span></span><code>task data
-</code></pre></div>
-<p>This runs <code>snailz</code> to create <code>data/snailz.db</code>, then runs each SQL file
-in <code>examples/*.sql</code> against it to produce CSV files in <code>tmp/</code>.</p>
-<h3 id="building">Building</h3>
-<p>Build the font data, JavaScript bundle, and Python package:</p>
-<div class="highlight"><pre><span></span><code>task build
-</code></pre></div>
-<p>This:</p>
-<ol>
-<li>Encodes <code>assets/xkcd-script.ttf</code> as a base64 data URL in <code>js/src/utils/fontData.js</code>.</li>
-<li>Bundles the JavaScript source with esbuild into <code>src/chart_xkcd/static/chart.xkcd.js</code>.</li>
-<li>Builds the Python wheel and sdist with <code>python -m build</code>.</li>
-</ol>
-<h3 id="examples">Examples</h3>
-<h4 id="python-command-line-examples-examplespy">Python command-line examples (<code>examples/*.py</code>)</h4>
+<h2 id="examples">Examples</h2>
+<h3 id="python-command-line-examples-examplespy">Python command-line examples (<code>examples/*.py</code>)</h3>
 <p>Each chart type has a standalone script that reads a CSV file and
 writes a static HTML page:</p>
 <table>
@@ -980,19 +877,19 @@ writes a static HTML page:</p>
 <p>Or run one individually:</p>
 <div class="highlight"><pre><span></span><code>python examples/bar.py tmp/bar.csv tmp/bar.html
 </code></pre></div>
-<h4 id="marimo-notebook-examplesnotebookpy">Marimo notebook (<code>examples/notebook.py</code>)</h4>
+<h2 id="marimo-notebook-examplesnotebookpy">Marimo notebook (<code>examples/notebook.py</code>)</h2>
 <p>A marimo notebook that displays all six chart types as interactive
 widgets. Each cell reads a CSV file from <code>tmp/</code> and calls <code>to_widget()</code>
 to render the chart.</p>
 <div class="highlight"><pre><span></span><code>marimo run examples/notebook.py
 </code></pre></div>
-<h4 id="selection-test-notebook-examplestest_selectionpy">Selection test notebook (<code>examples/test_selection.py</code>)</h4>
+<h2 id="selection-test-notebook-examplestest_selectionpy">Selection test notebook (<code>examples/test_selection.py</code>)</h2>
 <p>A marimo notebook demonstrating click, shift-click, and box-select
 interactions. Each chart is wrapped with <code>mo.ui.anywidget()</code> so that
 selection changes trigger reactive cell updates.</p>
 <div class="highlight"><pre><span></span><code>marimo run examples/test_selection.py
 </code></pre></div>
-<h4 id="javascript-examples-jsexamples">JavaScript examples (<code>js/examples/</code>)</h4>
+<h2 id="javascript-examples-jsexamples">JavaScript examples (<code>js/examples/</code>)</h2>
 <p>A standalone HTML page (<code>example.html</code>) that renders all six chart
 types using the JavaScript library directly. The data is loaded
 dynamically from CSV files via <code>fetch()</code>. A symlink
@@ -1001,7 +898,7 @@ dynamically from CSV files via <code>fetch()</code>. A symlink
 <div class="highlight"><pre><span></span><code>task ex_js
 </code></pre></div>
 <p>Then open the URL printed by the dev server in a browser.</p>
-<h3 id="project-structure">Project structure</h3>
+<h2 id="project-structure">Project structure</h2>
 <div class="highlight"><pre><span></span><code>assets/                  xkcd-script.ttf font file
 bin/                     build scripts (font_encode.py)
 examples/                Python examples, SQL queries, marimo notebooks
@@ -1012,6 +909,8 @@ js/src/                  JavaScript chart source
   index.js               standalone library entry point
   components/Tooltip.js  tooltip component
   utils/                 shared helpers (axes, labels, legend, font, filter)
+pages/                   MkDocs documentation files
+  pages/img/             screenshots of charts
 src/chart_xkcd/          Python package
   bar.py, line.py, ...   chart classes
   charts.py              base classes and validation
@@ -1020,6 +919,9 @@ src/chart_xkcd/          Python package
   config.py              positionType constants
   main.py                CLI entry point
   static/                bundled JS (built artifact)
+docs-requirements.txt    ReadTheDocs dependencies
+mkdocs.yml               MkDocs configuration file
+pyproject.toml           Python project file
 </code></pre></div>
 
 

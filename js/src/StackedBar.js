@@ -13,9 +13,9 @@ import {
 /**
  * Stacked bar chart supporting multiple datasets.
  *
- * Each dataset's bars are stacked on top of the previous one.
- * Includes a legend, hover tooltips showing all dataset values
- * for the hovered category, and click/shift-click selection.
+ * When `normalize` is true each column is rescaled so all segments sum
+ * to 100%, giving a 100% stacked bar chart. Supports explicit y-axis
+ * bounds via `yMin` / `yMax`.
  *
  * @param {SVGElement} svg - Target SVG element.
  * @param {Object} params
@@ -26,8 +26,12 @@ import {
  * @param {string[]} params.data.labels - Category labels for the x-axis.
  * @param {Object[]} params.data.datasets - Array of dataset objects, each with
  *   `data` (number[]), optional `label`, and optional `color`.
- * @param {Object} [params.options] - Includes `showLegend`, `legendPosition`,
- *   and all common options from `applyDefaults`.
+ * @param {Object} [params.options]
+ * @param {boolean} [params.options.normalize=false] - Scale each column to 100%.
+ * @param {number} [params.options.yMin] - Minimum y-axis value (default 0).
+ * @param {number} [params.options.yMax] - Maximum y-axis value (default data max).
+ * @param {boolean} [params.options.showLegend=true] - Show legend.
+ * @param {number} [params.options.legendPosition] - Legend placement.
  */
 class StackedBar {
   constructor(svg, {
@@ -37,6 +41,9 @@ class StackedBar {
       yTickCount: config.defaultTickCount,
       legendPosition: config.positionType.upLeft,
       showLegend: true,
+      normalize: false,
+      yMin: null,
+      yMax: null,
       ...options,
     }, datasets);
     this.title = title;
@@ -67,11 +74,25 @@ class StackedBar {
       .domain(this.data.labels)
       .padding(config.bandPadding);
 
+    // Column totals (used for normalize and y-scale max)
     const allCols = this.data.datasets
       .reduce((r, a) => a.data.map((b, i) => (r[i] || 0) + b), []);
 
+    // Optionally rescale each column to 100%
+    const displayDatasets = this.options.normalize
+      ? this.data.datasets.map((ds) => ({
+        ...ds,
+        data: ds.data.map((v, j) => (allCols[j] ? (v / allCols[j]) * 100 : 0)),
+      }))
+      : this.data.datasets;
+
+    const yDomainMax = this.options.normalize
+      ? 100
+      : (this.options.yMax != null ? this.options.yMax : Math.max(...allCols));
+    const yDomainMin = this.options.yMin != null ? this.options.yMin : 0;
+
     const yScale = scaleLinear()
-      .domain([0, Math.max(...allCols)])
+      .domain([yDomainMin, yDomainMax])
       .range([this.height, 0]);
 
     const graphPart = this.chart.append('g');
@@ -92,15 +113,15 @@ class StackedBar {
       stroke: this.options.strokeColor,
     });
 
-    const mergedData = this.data.datasets
+    const mergedData = displayDatasets
       .reduce((pre, cur) => pre.concat(cur.data), []);
 
-    const dataLength = this.data.datasets[0].data.length;
+    const dataLength = displayDatasets[0].data.length;
 
-    const offsets = this.data.datasets
+    const offsets = displayDatasets
       .reduce((r, x, i) => {
         if (i > 0) {
-          r.push(x.data.map((y, j) => this.data.datasets[i - 1].data[j] + r[i - 1][j]));
+          r.push(x.data.map((y, j) => displayDatasets[i - 1].data[j] + r[i - 1][j]));
         } else {
           r.push(new Array(x.data.length).fill(0));
         }
@@ -140,13 +161,17 @@ class StackedBar {
         const tipX = mouse(nodes[i])[0] + this.margin.left + config.tooltipMouseOffset;
         const tipY = mouse(nodes[i])[1] + this.margin.top + config.tooltipMouseOffset;
 
-        const tooltipItems = this.data.datasets.map((dataset, j) => ({
-          color: this.options.dataColors[j],
-          text: `${this.data.datasets[j].label || ''}: ${this.data.datasets[j].data[i % dataLength]}`,
-        })).reverse();
+        const colIndex = i % dataLength;
+        const tooltipItems = this.data.datasets.map((dataset, j) => {
+          const raw = dataset.data[colIndex];
+          const text = this.options.normalize
+            ? `${dataset.label || ''}: ${raw} (${allCols[colIndex] ? ((raw / allCols[colIndex]) * 100).toFixed(1) : 0}%)`
+            : `${dataset.label || ''}: ${raw}`;
+          return { color: this.options.dataColors[j], text };
+        }).reverse();
 
         tooltip.update({
-          title: this.data.labels[i],
+          title: this.data.labels[colIndex],
           items: tooltipItems,
           position: {
             x: tipX,

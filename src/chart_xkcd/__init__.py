@@ -1,7 +1,7 @@
 """chart_xkcd: Python API for generating xkcd-style charts.
 
-Provides six chart classes (Bar, Line, Pie, Radar, Scatter, StackedBar)
-that mirror the chart.xkcd JavaScript library. Charts can be:
+Provides seven chart classes (Bar, Heatmap, Line, Pie, Radar, Scatter,
+StackedBar) that mirror the chart.xkcd JavaScript library. Charts can be:
 
 - Rendered as standalone HTML files via ``render()`` / ``to_html()``.
 - Displayed in Jupyter or marimo notebooks via ``to_widget()``.
@@ -11,14 +11,10 @@ and an ``options`` dict. Axis-based charts also accept ``x_label``
 and ``y_label``. See individual class docstrings for details.
 """
 
-from importlib.metadata import PackageNotFoundError, version
-
-try:
-    __version__ = version("chart-xkcd")
-except PackageNotFoundError:
-    __version__ = "unknown"
+__version__ = "0.5.0"
 
 from .bar import Bar as Bar
+from .heatmap import Heatmap as Heatmap
 from .line import Line as Line
 from .pie import Pie as Pie
 from .radar import Radar as Radar

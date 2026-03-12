@@ -21,7 +21,7 @@ async function main() {
   await loadFont();
 
   // Bar
-  const barRows = await fetchCSV('./tmp/bar.csv');
+  const barRows = await fetchCSV('./data/bar.csv');
   new chartXkcd.Bar(document.querySelector('.bar-chart'), {
     title: 'Samples per Person',
     xLabel: 'Person',
@@ -33,7 +33,7 @@ async function main() {
   });
 
   // Stacked Bar
-  const stackedRows = await fetchCSV('./tmp/stacked_bar.csv');
+  const stackedRows = await fetchCSV('./data/stacked_bar.csv');
   const grids = [...new Set(stackedRows.map(r => r.grid))].sort();
   const stackedVarieties = [...new Set(stackedRows.map(r => r.variety))].sort();
   const stackedLookup = {};
@@ -53,7 +53,7 @@ async function main() {
   });
 
   // Line
-  const lineRows = await fetchCSV('./tmp/line.csv');
+  const lineRows = await fetchCSV('./data/line.csv');
   new chartXkcd.Line(document.querySelector('.line-chart'), {
     title: 'Samples Collected per Week',
     xLabel: 'Week',
@@ -65,7 +65,7 @@ async function main() {
   });
 
   // Scatter
-  const scatterRows = await fetchCSV('./tmp/scatter.csv');
+  const scatterRows = await fetchCSV('./data/scatter.csv');
   const scatterVarieties = [...new Set(scatterRows.map(r => r.variety))].sort();
   new chartXkcd.Scatter(document.querySelector('.scatter-chart'), {
     title: 'Snail Mass vs Diameter',
@@ -86,7 +86,7 @@ async function main() {
   });
 
   // Pie
-  const pieRows = await fetchCSV('./tmp/pie.csv');
+  const pieRows = await fetchCSV('./data/pie.csv');
   new chartXkcd.Pie(document.querySelector('.pie-chart'), {
     title: 'Samples by Variety',
     data: {
@@ -100,7 +100,7 @@ async function main() {
   });
 
   // Radar
-  const radarRows = await fetchCSV('./tmp/radar.csv');
+  const radarRows = await fetchCSV('./data/radar.csv');
   const radarGrids = [...new Set(radarRows.map(r => r.grid))].sort();
   const radarVarieties = [...new Set(radarRows.map(r => r.variety))].sort();
   const radarLookup = {};

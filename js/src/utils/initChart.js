@@ -119,3 +119,29 @@ export function createTooltip(svgEl, options) {
     backgroundColor: options.backgroundColor,
   });
 }
+
+/**
+ * Make a chart responsive by re-running its constructor whenever the
+ * SVG's parent element changes size.
+ *
+ * Usage:
+ *   makeResponsive(svg, () => new chartXkcd.Bar(svg, { ... }));
+ *
+ * The function debounces resize events via `requestAnimationFrame` so
+ * rapid resizes only trigger one re-render. Any previous observer
+ * stored on the SVG element is disconnected before attaching a new one.
+ *
+ * @param {SVGElement} svg - The SVG element passed to the chart constructor.
+ * @param {Function} constructorFn - Zero-argument function that creates (or
+ *   re-creates) the chart. Called once immediately and again on resize.
+ */
+export function makeResponsive(svg, constructorFn) {
+  if (svg._xkcdResizeObserver) svg._xkcdResizeObserver.disconnect();
+  let frameId = null;
+  const ro = new ResizeObserver(() => {
+    if (frameId) cancelAnimationFrame(frameId);
+    frameId = requestAnimationFrame(() => { frameId = null; constructorFn(); });
+  });
+  svg._xkcdResizeObserver = ro;
+  ro.observe(svg.parentElement);
+}

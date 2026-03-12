@@ -12,6 +12,7 @@ def _():
 
     from chart_xkcd import (
         Bar,
+        Heatmap,
         Line,
         Pie,
         Radar,
@@ -21,12 +22,13 @@ def _():
         to_widget,
     )
 
-    return Bar, Line, Pie, Radar, Scatter, StackedBar, csv, mo, positionType, to_widget
+    return Bar, Heatmap, Line, Pie, Radar, Scatter, StackedBar, csv, mo, positionType, to_widget
 
 
 @app.cell
 def _(
     bar_chart,
+    heatmap_chart,
     line_chart,
     mo,
     pie_chart,
@@ -46,6 +48,9 @@ def _(
             to_widget(scatter_chart, **_small),
             to_widget(pie_chart, **_small),
             to_widget(radar_chart, **_small),
+        ]),
+        mo.hstack([
+            to_widget(heatmap_chart, **_small),
         ]),
     ])
     return
@@ -210,6 +215,31 @@ def _(Radar, csv, positionType):
 @app.cell
 def _(radar_chart, to_widget):
     to_widget(radar_chart)
+    return
+
+
+@app.cell
+def _(Heatmap, csv):
+    with open("data/heatmap.csv") as _f:
+        _matrix = [[float(v) for v in row] for row in csv.reader(_f)]
+
+    _n_rows = len(_matrix)
+    _n_cols = len(_matrix[0]) if _matrix else 0
+
+    heatmap_chart = Heatmap(
+        title="Grid Values",
+        x_label="Column",
+        y_label="Row",
+        x_labels=[str(i) for i in range(_n_cols)],
+        y_labels=[str(i) for i in range(_n_rows)],
+        datasets=[{"data": _matrix}],
+    )
+    return (heatmap_chart,)
+
+
+@app.cell
+def _(heatmap_chart, to_widget):
+    to_widget(heatmap_chart)
     return
 
 

@@ -12,35 +12,44 @@ class Line(_AxisChart):
         x_label: Label for the x-axis.
         y_label: Label for the y-axis.
         labels: X-axis category labels.
-        datasets: List of dataset dicts, each with `data` (list of numeric
-            values), `label` (str), and an optional `color` (str) key.
+        datasets: List of dataset dicts, each with ``data`` (list of numeric
+            values), ``label`` (str), and an optional ``color`` (str) key.
         options: Dict of chart options.
 
     Options:
 
-    - `backgroundColor` (str): Background color (default `'white'`).
-    - `dataColors` (list[str]): Line colors.
-    - `fontFamily` (str): Font family (default `'xkcd'`).
-    - `legendPosition` (int): Legend placement (use `positionType`).
-    - `showLegend` (bool): Show legend (default True).
-    - `strokeColor` (str): Axis/border color (default `'black'`).
-    - `unxkcdify` (bool): Disable hand-drawn style (default False).
-    - `yTickCount` (int): Number of y-axis ticks (default 3).
+    - ``backgroundColor`` (str): Background color (default ``'white'``).
+    - ``dataColors`` (list[str]): Line colors.
+    - ``fontFamily`` (str): Font family (default ``'xkcd'``).
+    - ``legendPosition`` (int): Legend placement (use ``positionType``).
+    - ``showArea`` (bool): Fill the area under each line (default False).
+    - ``showLegend`` (bool): Show legend (default True).
+    - ``strokeColor`` (str): Axis/border color (default ``'black'``).
+    - ``unxkcdify`` (bool): Disable hand-drawn style (default False).
+    - ``xRef`` (list[dict]): Vertical reference lines. Each entry is
+      ``{"value": <x-label>, "label": <annotation-text>}``.
+    - ``yRef`` (list[dict]): Horizontal reference lines. Each entry is
+      ``{"value": <number>, "label": <annotation-text>}``.
+    - ``yMin`` (float): Minimum y-axis value.
+    - ``yMax`` (float): Maximum y-axis value.
+    - ``yTickCount`` (int): Number of y-axis ticks (default 3).
 
-    Example:
+    Example::
 
-    ```
-    Line(
-        title="Temperature",
-        x_label="Day",
-        y_label="Degrees",
-        labels=["Mon", "Tue", "Wed", "Thu"],
-        datasets=[
-            {"data": [65, 70, 68, 72], "label": "NYC"},
-            {"data": [80, 82, 79, 85], "label": "LA"},
-        ],
-    )
-    ```
+        Line(
+            title="Temperature",
+            x_label="Day",
+            y_label="Degrees",
+            labels=["Mon", "Tue", "Wed", "Thu"],
+            datasets=[
+                {"data": [65, 70, 68, 72], "label": "NYC"},
+                {"data": [80, 82, 79, 85], "label": "LA"},
+            ],
+            options={
+                "showArea": True,
+                "yRef": [{"value": 75, "label": "target"}],
+            },
+        )
     """
 
     def __init__(

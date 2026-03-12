@@ -1,6 +1,6 @@
 import { line, curveMonotoneX } from 'd3-shape';
 import { select, event as d3Event } from 'd3-selection';
-import { scaleLinear, scaleTime } from 'd3-scale';
+import { scaleLinear, scaleTime, scaleSqrt } from 'd3-scale';
 import dayjs from 'dayjs';
 
 import addAxis from './utils/addAxis';
@@ -13,13 +13,15 @@ import {
 } from './utils/initChart';
 
 /**
- * Scatter (XY) chart with optional connecting lines.
+ * Scatter (XY) chart with optional connecting lines and bubble mode.
  *
- * Each dataset contains an array of `{x, y}` points. Dots grow
- * on hover to show a tooltip. Supports time-formatted x-values
- * (via the `timeFormat` option and dayjs), click/shift-click
- * selection, and drag-to-select (box selection) that reports all
- * enclosed points.
+ * Each dataset contains an array of `{x, y}` points. When any point
+ * includes an `r` field the chart enters bubble mode: dot radii are
+ * scaled by `r` using a square-root scale so area encodes magnitude.
+ *
+ * Supports `xRef`/`yRef` reference lines, explicit axis bounds
+ * (`xMin`, `xMax`, `yMin`, `yMax`), time-formatted x-values, click/
+ * shift-click selection, and drag-to-select box selection.
  *
  * @param {SVGElement} svg - Target SVG element.
  * @param {Object} params
@@ -28,10 +30,21 @@ import {
  * @param {string} [params.yLabel] - Y-axis label.
  * @param {Object} params.data
  * @param {Object[]} params.data.datasets - Array of dataset objects, each with
- *   `data` ({x,y}[]), optional `label`, and optional `color`.
- * @param {Object} [params.options] - Includes `dotSize`, `showLine`,
- *   `timeFormat`, `xTickCount`, `yTickCount`, `showLegend`,
- *   `legendPosition`, and all common options from `applyDefaults`.
+ *   `data` ({x, y[, r]}[]), optional `label`, and optional `color`.
+ * @param {Object} [params.options]
+ * @param {number} [params.options.dotSize=1] - Base dot size multiplier.
+ * @param {boolean} [params.options.showLine=false] - Connect dots with lines.
+ * @param {string} [params.options.timeFormat] - dayjs format for temporal x.
+ * @param {number} [params.options.xTickCount=3] - Number of x-axis ticks.
+ * @param {number} [params.options.yTickCount=3] - Number of y-axis ticks.
+ * @param {number} [params.options.xMin] - Minimum x-axis value.
+ * @param {number} [params.options.xMax] - Maximum x-axis value.
+ * @param {number} [params.options.yMin] - Minimum y-axis value.
+ * @param {number} [params.options.yMax] - Maximum y-axis value.
+ * @param {Array<{value:number, label:string}>} [params.options.xRef] - Vertical
+ *   reference lines at the given x values.
+ * @param {Array<{value:number, label:string}>} [params.options.yRef] - Horizontal
+ *   reference lines at the given y values.
  */
 class Scatter {
   constructor(svg, {
@@ -45,6 +58,12 @@ class Scatter {
       yTickCount: config.defaultTickCount,
       legendPosition: config.positionType.upLeft,
       showLegend: true,
+      xMin: null,
+      xMax: null,
+      yMin: null,
+      yMax: null,
+      xRef: [],
+      yRef: [],
       ...options,
     }, datasets);
     this.title = title;
@@ -84,19 +103,36 @@ class Scatter {
     const allDataX = allData.map((d) => d.x);
     const allDataY = allData.map((d) => d.y);
 
+    const xDomainMin = this.options.xMin != null ? this.options.xMin : Math.min(...allDataX);
+    const xDomainMax = this.options.xMax != null ? this.options.xMax : Math.max(...allDataX);
+    const yDomainMin = this.options.yMin != null ? this.options.yMin : Math.min(...allDataY);
+    const yDomainMax = this.options.yMax != null ? this.options.yMax : Math.max(...allDataY);
+
     let xScale = scaleLinear()
-      .domain([Math.min(...allDataX), Math.max(...allDataX)])
+      .domain([xDomainMin, xDomainMax])
       .range([0, this.width]);
 
     if (this.options.timeFormat) {
       xScale = scaleTime()
-        .domain([Math.min(...allDataX), Math.max(...allDataX)])
+        .domain([xDomainMin, xDomainMax])
         .range([0, this.width]);
     }
 
     const yScale = scaleLinear()
-      .domain([Math.min(...allDataY), Math.max(...allDataY)])
+      .domain([yDomainMin, yDomainMax])
       .range([this.height, 0]);
+
+    // Bubble mode: use scaleSqrt when any point has an r field
+    const allR = allData.filter((d) => d.r != null).map((d) => d.r);
+    const hasBubble = allR.length > 0;
+    const dotInitSize = config.dotInitRadius * (this.options.dotSize || 1);
+    const dotHoverSize = config.dotHoverRadius * (this.options.dotSize || 1);
+    let rScale;
+    if (hasBubble) {
+      rScale = scaleSqrt()
+        .domain([0, Math.max(...allR)])
+        .range([0, dotInitSize * 4]);
+    }
 
     const graphPart = this.chart.append('g')
       .attr('pointer-events', 'all');
@@ -117,6 +153,43 @@ class Scatter {
       stroke: this.options.strokeColor,
     });
 
+    // Reference lines (drawn before data)
+    (this.options.xRef || []).forEach((ref) => {
+      const xPos = xScale(ref.value);
+      graphPart.append('line')
+        .attr('x1', xPos).attr('x2', xPos)
+        .attr('y1', 0).attr('y2', this.height)
+        .attr('stroke', this.options.strokeColor)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '6,4');
+      if (ref.label) {
+        graphPart.append('text')
+          .attr('x', xPos + 4)
+          .attr('y', 14)
+          .style('font-size', config.tooltipFontSize)
+          .style('fill', this.options.strokeColor)
+          .text(ref.label);
+      }
+    });
+
+    (this.options.yRef || []).forEach((ref) => {
+      const yPos = yScale(ref.value);
+      graphPart.append('line')
+        .attr('x1', 0).attr('x2', this.width)
+        .attr('y1', yPos).attr('y2', yPos)
+        .attr('stroke', this.options.strokeColor)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '6,4');
+      if (ref.label) {
+        graphPart.append('text')
+          .attr('x', 4)
+          .attr('y', yPos - 4)
+          .style('font-size', config.tooltipFontSize)
+          .style('fill', this.options.strokeColor)
+          .text(ref.label);
+      }
+    });
+
     // lines
     if (this.options.showLine) {
       const theLine = line()
@@ -135,9 +208,7 @@ class Scatter {
         .attr('filter', this.filter);
     }
 
-    // dots
-    const dotInitSize = config.dotInitRadius * (this.options.dotSize || 1);
-    const dotHoverSize = config.dotHoverRadius * (this.options.dotSize || 1);
+    // dots / bubbles
     graphPart.selectAll('.xkcd-chart-xycircle-group')
       .data(this.data.datasets)
       .enter()
@@ -157,7 +228,11 @@ class Scatter {
         const xyGroupIndex = Number(select(nodes[i].parentElement).attr('xy-group-index'));
         return this.options.dataColors[xyGroupIndex];
       })
-      .attr('r', dotInitSize)
+      .attr('r', (d) => {
+        if (hasBubble) return rScale(d.r != null ? d.r : 0);
+        return dotInitSize;
+      })
+      .attr('fill-opacity', hasBubble ? 0.6 : 1)
       .attr('cx', (d) => xScale(d.x))
       .attr('cy', (d) => yScale(d.y))
       .attr('pointer-events', 'all')
@@ -170,21 +245,27 @@ class Scatter {
             label: this.data.datasets[xyGroupIndex].label,
             x: d.x,
             y: d.y,
+            ...(d.r != null ? { r: d.r } : {}),
           }, d3Event.shiftKey);
         }
       })
       .on('mouseover', (d, i, nodes) => {
         const xyGroupIndex = Number(select(nodes[i].parentElement).attr('xy-group-index'));
-        select(nodes[i]).attr('r', dotHoverSize);
+        const currentR = hasBubble ? rScale(d.r != null ? d.r : 0) : dotInitSize;
+        select(nodes[i]).attr('r', currentR + (dotHoverSize - dotInitSize));
         const tipX = xScale(d.x) + this.margin.left + config.scatterMouseOffset;
         const tipY = yScale(d.y) + this.margin.top + config.scatterMouseOffset;
+        const xLabel = this.options.timeFormat
+          ? dayjs(this.data.datasets[xyGroupIndex].data[i].x).format(this.options.timeFormat)
+          : `${this.data.datasets[xyGroupIndex].data[i].x}`;
+        const valueText = d.r != null
+          ? `${this.data.datasets[xyGroupIndex].label || ''}: ${d.y} (r=${d.r})`
+          : `${this.data.datasets[xyGroupIndex].label || ''}: ${d.y}`;
         tooltip.update({
-          title: this.options.timeFormat
-            ? dayjs(this.data.datasets[xyGroupIndex].data[i].x).format(this.options.timeFormat)
-            : `${this.data.datasets[xyGroupIndex].data[i].x}`,
+          title: xLabel,
           items: [{
             color: this.options.dataColors[xyGroupIndex],
-            text: `${this.data.datasets[xyGroupIndex].label || ''}: ${d.y}`,
+            text: valueText,
           }],
           position: {
             x: tipX,
@@ -195,7 +276,8 @@ class Scatter {
         tooltip.show();
       })
       .on('mouseout', (d, i, nodes) => {
-        select(nodes[i]).attr('r', dotInitSize);
+        const currentR = hasBubble ? rScale(d.r != null ? d.r : 0) : dotInitSize;
+        select(nodes[i]).attr('r', currentR);
         tooltip.hide();
       });
 
@@ -278,6 +360,7 @@ class Scatter {
                   label: dataset.label,
                   x: d.x,
                   y: d.y,
+                  ...(d.r != null ? { r: d.r } : {}),
                 });
               }
             });

@@ -1,8 +1,8 @@
 [project]
 name = "chart-xkcd"
+dynamic = ["version"]
 description = "Python API for generating XKCD-style charts"
 keywords = ["charts"]
-version = "0.4.2"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
@@ -28,6 +28,9 @@ artifacts = [
     "src/chart_xkcd/static/chart.xkcd.js",
 ]
 
+[tool.hatch.version]
+path = "src/chart_xkcd/__init__.py"
+
 [tool.hatch.build.targets.sdist]
 artifacts = [
     "src/chart_xkcd/static/chart.xkcd.js",
@@ -42,53 +45,5 @@ dev = [
     "mkdocs-material>=9.7.1",
     "mkdocstrings[python]>=1.0.0",
     "ruff>=0.14.10",
-    "taskipy>=1.14.1",
     "twine>=6.2.0",
 ]
-
-[tool.taskipy.tasks]
-build = {help = "build package", cmd = """
-python bin/font_encode.py assets/xkcd-script.ttf js/src/utils/fontData.js &&
-cd js &&
-npm run build &&
-cd - &&
-python -m build
-"""}
-lint = {help = "check code issues", cmd = """
-ruff check . &&
-ty check . &&
-cd js &&
-npm run lint
-"""}
-clean = {help = "clean up", cmd = """
-rm -rf ./dist &&
-rm -f ./src/static/*.js &&
-rm -rf ./data &&
-rm -rf ./tmp &&
-find . -path './.venv' -prune -o -type d -name '.ruff_cache' -exec rm -rf {} + &&
-find . -path './.venv' -prune -o -type d -name '__pycache__' -exec rm -rf {} + &&
-find . -path './.venv' -prune -o -type f -name '*~' -exec rm {} +
-"""}
-docs = {help = "build documentation", cmd = """
-mkdir -p pages &&
-cp README.md pages/index.md &&
-cp LICENSE.md pages/license.md &&
-cp CODE_OF_CONDUCT.md pages/conduct.md &&
-cp CONTRIBUTING.md pages/contributing.md &&
-mkdocs build &&
-touch docs/.nojekyll &&
-cp docs-requirements.txt docs/requirements.txt
-"""}
-ex_js = {help = "run server to view JS examples", cmd = "cd js && npm start"}
-ex_py = {help = "re-create HTML files using Python", cmd = """
-mkdir -p tmp &&
-for file in examples/*.py
-do
-    name=$(basename "$file" .py)
-    python "$file" "data/$name.csv" "tmp/$name.html"
-done
-"""}
-fix = {help = "fix Python code issues", cmd = "ruff check --fix ."}
-format = {help = "format Python code", cmd = "ruff format ."}
-publish = {help = "publish using ~/.pypirc credentials", cmd = "twine upload --verbose dist/*"}
-serve = {help = "run local server", cmd = "python -m http.server"}

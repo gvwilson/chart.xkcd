@@ -16,29 +16,30 @@ writes a static HTML page:
 
 | Script | Chart type | Input CSV | Description |
 |---|---|---|---|
-| `bar.py` | Bar | `tmp/bar.csv` | Samples per person |
-| `stacked_bar.py` | StackedBar | `tmp/stacked_bar.csv` | Samples by variety and grid |
-| `line.py` | Line | `tmp/line.csv` | Samples collected per week |
-| `scatter.py` | Scatter | `tmp/scatter.csv` | Snail mass vs diameter |
-| `pie.py` | Pie | `tmp/pie.csv` | Samples by variety |
-| `radar.py` | Radar | `tmp/radar.csv` | Samples by variety and grid |
+| `bar.py` | Bar | `data/bar.csv` | Samples per person |
+| `heatmap.py` | Heatmap | `data/heatmap.csv` | Pollution readings in sample grid |
+| `line.py` | Line | `data/line.csv` | Samples collected per week |
+| `pie.py` | Pie | `data/pie.csv` | Samples by variety |
+| `radar.py` | Radar | `data/radar.csv` | Samples by variety and grid |
+| `scatter.py` | Scatter | `data/scatter.csv` | Snail mass vs diameter |
+| `stacked_bar.py` | StackedBar | `data/stacked_bar.csv` | Samples by variety and grid |
 
 Run them all at once with:
 
 ```
-task ex_py
+make ex_py
 ```
 
 Or run one individually:
 
 ```
-python examples/bar.py tmp/bar.csv tmp/bar.html
+python examples/bar.py data/bar.csv tmp/bar.html
 ```
 
 ### Marimo notebook (`examples/notebook.py`)
 
 A marimo notebook that displays all six chart types as interactive
-widgets. Each cell reads a CSV file from `tmp/` and calls `to_widget()`
+widgets. Each cell reads a CSV file from `data/` and calls `to_widget()`
 to render the chart.
 
 ```
@@ -60,12 +61,12 @@ marimo run examples/test_selection.py
 A standalone HTML page (`example.html`) that renders all six chart
 types using the JavaScript library directly. The data is loaded
 dynamically from CSV files via `fetch()`. A symlink
-`js/examples/tmp` points to the project-level `tmp/` directory.
+`js/examples/data` points to the project-level `data/` directory.
 
 To view the JavaScript examples with a dev server:
 
 ```
-task ex_js
+make ex_js
 ```
 
 Then open the URL printed by the dev server in a browser.

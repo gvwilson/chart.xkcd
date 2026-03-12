@@ -1,4 +1,4 @@
-import { line, curveMonotoneX } from 'd3-shape';
+import { line, area, curveMonotoneX } from 'd3-shape';
 import { select, mouse, event as d3Event } from 'd3-selection';
 import { scalePoint, scaleLinear } from 'd3-scale';
 
@@ -14,10 +14,10 @@ import {
 /**
  * Line chart with smooth (monotone-X) interpolation.
  *
- * Supports multiple datasets rendered as separate colored lines.
- * A vertical hover line snaps to the nearest label and shows
- * a tooltip with values from all datasets at that point.
- * Includes click/shift-click selection and an optional legend.
+ * Supports multiple datasets, optional area fill under each line,
+ * optional reference lines (xRef / yRef), and explicit axis bounds
+ * (yMin / yMax). A vertical hover line snaps to the nearest label
+ * and shows a tooltip with all dataset values at that point.
  *
  * @param {SVGElement} svg - Target SVG element.
  * @param {Object} params
@@ -28,8 +28,16 @@ import {
  * @param {string[]} params.data.labels - Labels for each point along the x-axis.
  * @param {Object[]} params.data.datasets - Array of dataset objects, each with
  *   `data` (number[]), optional `label`, and optional `color`.
- * @param {Object} [params.options] - Includes `showLegend`, `legendPosition`,
- *   and all common options from `applyDefaults`.
+ * @param {Object} [params.options]
+ * @param {boolean} [params.options.showArea=false] - Fill the area under each line.
+ * @param {number} [params.options.yMin] - Minimum y-axis value.
+ * @param {number} [params.options.yMax] - Maximum y-axis value.
+ * @param {Array<{value:string, label:string}>} [params.options.xRef] - Vertical
+ *   reference lines at the given x-axis label values.
+ * @param {Array<{value:number, label:string}>} [params.options.yRef] - Horizontal
+ *   reference lines at the given y values.
+ * @param {boolean} [params.options.showLegend=true] - Show legend.
+ * @param {number} [params.options.legendPosition] - Legend placement.
  */
 class Line {
   constructor(svg, {
@@ -39,6 +47,11 @@ class Line {
       yTickCount: config.defaultTickCount,
       legendPosition: config.positionType.upLeft,
       showLegend: true,
+      showArea: false,
+      yMin: null,
+      yMax: null,
+      xRef: [],
+      yRef: [],
       ...options,
     }, datasets);
     this.title = title;
@@ -71,8 +84,11 @@ class Line {
     const allData = this.data.datasets
       .reduce((pre, cur) => pre.concat(cur.data), []);
 
+    const yMin = this.options.yMin != null ? this.options.yMin : Math.min(...allData);
+    const yMax = this.options.yMax != null ? this.options.yMax : Math.max(...allData);
+
     const yScale = scaleLinear()
-      .domain([Math.min(...allData), Math.max(...allData)])
+      .domain([yMin, yMax])
       .range([this.height, 0]);
 
     const graphPart = this.chart.append('g')
@@ -96,6 +112,63 @@ class Line {
 
     this.svgEl.selectAll('.domain')
       .attr('filter', this.filter);
+
+    // Reference lines (drawn before data so they appear behind)
+    (this.options.xRef || []).forEach((ref) => {
+      const xPos = xScale(ref.value);
+      if (xPos == null) return;
+      graphPart.append('line')
+        .attr('x1', xPos).attr('x2', xPos)
+        .attr('y1', 0).attr('y2', this.height)
+        .attr('stroke', this.options.strokeColor)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '6,4');
+      if (ref.label) {
+        graphPart.append('text')
+          .attr('x', xPos + 4)
+          .attr('y', 14)
+          .style('font-size', config.tooltipFontSize)
+          .style('fill', this.options.strokeColor)
+          .text(ref.label);
+      }
+    });
+
+    (this.options.yRef || []).forEach((ref) => {
+      const yPos = yScale(ref.value);
+      graphPart.append('line')
+        .attr('x1', 0).attr('x2', this.width)
+        .attr('y1', yPos).attr('y2', yPos)
+        .attr('stroke', this.options.strokeColor)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-dasharray', '6,4');
+      if (ref.label) {
+        graphPart.append('text')
+          .attr('x', 4)
+          .attr('y', yPos - 4)
+          .style('font-size', config.tooltipFontSize)
+          .style('fill', this.options.strokeColor)
+          .text(ref.label);
+      }
+    });
+
+    // Area fill (behind lines)
+    if (this.options.showArea) {
+      const theArea = area()
+        .x((d, i) => xScale(this.data.labels[i]))
+        .y0(this.height)
+        .y1((d) => yScale(d))
+        .curve(curveMonotoneX);
+
+      graphPart.selectAll('.xkcd-chart-line-area')
+        .data(this.data.datasets)
+        .enter()
+        .append('path')
+        .attr('class', 'xkcd-chart-line-area')
+        .attr('d', (d) => theArea(d.data))
+        .attr('fill', (d, i) => this.options.dataColors[i])
+        .attr('fill-opacity', 0.15)
+        .attr('stroke', 'none');
+    }
 
     const theLine = line()
       .x((d, i) => xScale(this.data.labels[i]))

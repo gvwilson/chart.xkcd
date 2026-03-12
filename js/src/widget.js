@@ -9,6 +9,7 @@
  * that write the current selection back to the model.
  */
 import Bar from './Bar';
+import Heatmap from './Heatmap';
 import Line from './Line';
 import Pie from './Pie';
 import Radar from './Radar';
@@ -16,9 +17,9 @@ import Scatter from './Scatter';
 import StackedBar from './StackedBar';
 import { loadFont } from './utils/addFont';
 
-export { Bar, Line, Pie, Radar, Scatter, StackedBar };
+export { Bar, Heatmap, Line, Pie, Radar, Scatter, StackedBar };
 
-const chartTypes = { Bar, Line, Pie, Radar, Scatter, StackedBar };
+const chartTypes = { Bar, Heatmap, Line, Pie, Radar, Scatter, StackedBar };
 
 /**
  * AnyWidget render callback.
